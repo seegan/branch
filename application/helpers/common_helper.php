@@ -20,6 +20,33 @@ if( ! function_exists('hasBranchAccess') )
 }
 
 
+
+if( ! function_exists('getBatchCurrentExams') )
+{
+	function getBatchCurrentExams($batch_id = 0, $date = '0000-00-00')
+	{
+		$CI =& get_instance();
+		if( $current = $CI->common->getBatchCurrentExams($batch_id, $date) ) {
+			return $current;
+		}
+		return false;
+	}
+}
+
+if( ! function_exists('getBatchUpcommingExams') )
+{
+	function getBatchUpcommingExams($batch_id = 0)
+	{
+		$CI =& get_instance();
+		if( $upcomming = $CI->common->getBatchUpcommingExams($batch_id) ) {
+				return $upcomming;
+		}
+		return false;
+	}
+}
+
+
+
 if( ! function_exists('getYearList') )
 {
 	function getYearList( $selected_year = '' )

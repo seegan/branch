@@ -18,10 +18,15 @@ class Common_model extends MY_Model {
 		return $query->row();
 	}
 
-
-
-	public function () {
-		$query = "SELECT es.id as schedule_id, e.id as exam_id, es.schedule_name, es.description as schedule_description, es.start_date, es.end_date, es.result_date, es.offered_as, es.offer_cost, es.result_as, es.schedule_to, e.exam_duration, e.total_questions, e.total_marks, e.description as exam_description  FROM xtra_exam_schedule_batchs as esb JOIN xtra_exam_schedule as es ON esb.schedule_id = es.id JOIN xtra_exam as e ON es.exam_id = e.id WHERE es.active = 1 AND e.active = 1 AND esb.active = 1";
-		return $query->row();
+	public function getBatchUpcommingExams($batch_id = 0) {
+		$query = $this->db->query("SELECT es.id as schedule_id, e.id as exam_id, es.schedule_name, es.description as schedule_description, es.start_date, es.end_date, es.result_date, es.offered_as, es.offer_cost, es.result_as, es.schedule_to, e.exam_duration, e.total_questions, e.total_marks, e.description as exam_description  FROM xtra_exam_schedule_batchs as esb JOIN xtra_exam_schedule as es ON esb.schedule_id = es.id JOIN xtra_exam as e ON es.exam_id = e.id WHERE es.active = 1 AND e.active = 1 AND esb.active = 1 AND esb.batch_id = ".$batch_id);
+		return $query->result();
 	}
+
+
+	public function getBatchCurrentExams($batch_id = 0, $current_date= '000-00-00') {
+		$query = $this->db->query("SELECT es.id as schedule_id, e.id as exam_id, es.schedule_name, es.description as schedule_description, es.start_date, es.end_date, es.result_date, es.offered_as, es.offer_cost, es.result_as, es.schedule_to, e.exam_duration, e.total_questions, e.total_marks, e.description as exam_description  FROM xtra_exam_schedule_batchs as esb JOIN xtra_exam_schedule as es ON esb.schedule_id = es.id JOIN xtra_exam as e ON es.exam_id = e.id WHERE es.active = 1 AND e.active = 1 AND esb.active = 1 AND esb.batch_id = '{$batch_id}' AND '${current_date}' between es.start_date AND es.end_date");
+		return $query->result();
+	}
+
 }
