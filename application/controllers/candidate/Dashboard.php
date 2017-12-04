@@ -16,6 +16,7 @@ class Dashboard extends MY_Controller {
 
 		$data['candidate_data'] = $this->candidate_data;
 
+var_dump($this->candidate_data);
 
 		$page_content = $this->load->view('candidate/dashboard/dashboard', $data, TRUE);
 		$left_sidebar = $this->load->view('candidate/common/left_sidebar', '', TRUE);
