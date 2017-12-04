@@ -1,0 +1,86 @@
+/*Login Pages*/
+.login-exceeded {
+    width: 400px;
+    margin: 0 auto;
+}
+i.login-exceeded-ico {
+	font-size: 90px;
+    color: red;
+}
+
+.action-header {
+	position: relative;
+	text-align: center;
+}
+.action-group {
+	position: absolute;
+	display: inline-block;
+	right: 35px;
+}
+.action-header h2 {
+	display: inline-block;
+}
+.page-container {
+	margin-top: 20px;
+}
+
+.add-question .form-control, .action-header .form-control  {
+    border: 1px solid rgba(128, 137, 142, 0.8);
+    padding: 7px 12px 7px 12px;
+}
+
+.select2-drop-active {
+  border: 1px solid #a7a7a7 !important;
+  padding-top: 5px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15); }
+
+.select2-search input {
+    border: 1px solid #909090;
+} 
+
+.option_box {
+  margin-top: 20px;
+}
+
+.repeater iframe {
+    width: 99% !important;
+}
+
+.ms-container .ms-list {
+    box-shadow: none;
+    border: 1px solid #a5a5a5;
+}
+.ms-container {
+  width: inherit;
+}
+
+.modal-full-width {
+  max-width: 90%;
+}
+
+.question_exam_filter .filter_question p, .selected_question_list .selected_question_block p {
+  margin: 0;
+}
+
+.question_exam_filter, .selected_question_list, .candidate_scheduler_filter, .selected_candidate_list {
+  height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.remove-circle {
+  border-radius: 25px;
+  width: 20px;
+  height: 20px;
+  padding: 0px;
+  font-size: 11px;  
+}
+.block-readonly {
+  position: relative;
+}
+.button-readonly {
+  position: absolute;
+  right: 0;
+  top: 12px;
+  display: none;
+}
