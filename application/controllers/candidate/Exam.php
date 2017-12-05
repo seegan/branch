@@ -15,7 +15,7 @@ class Exam extends MY_Controller {
 	public function index() {
 
 		$data['candidate_data'] = $this->candidate_data;
-		$data['current_exams'] = getBatchCurrentExams($this->candidate_data->batch_id, date('Y-m-d H:i:s')); 
+		$data['current_exams'] = getBatchCurrentExams($this->candidate_data->batch_id, date('Y-m-d H:i:s'));
 
 		$page_content = $this->load->view('candidate/exam/current/current', $data, TRUE);
 		$left_sidebar = $this->load->view('candidate/common/left_sidebar', '', TRUE);

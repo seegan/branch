@@ -33,6 +33,8 @@ class MY_Controller extends Auth_Controller {
 
     parent::__construct();
 
+    date_default_timezone_set('Asia/Kolkata');
+    
     // Get user permissions from config file
     $this->permissions = $this->config->item('user_role_permissions');
 

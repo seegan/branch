@@ -72,4 +72,17 @@ jQuery(document).ready(function () {
     jQuery('.time_pic').timepicker({ 'timeFormat': 'h:i A' });
   }
 
+
+
+  jQuery('.take_exam_btn').on('click', function(){
+    var exam_link = jQuery(this).data('examinstruc');
+    launchApplication(exam_link, 'Exam Window');
+  });
+
+  jQuery('.take_schedule_btn').on('click', function(){
+    var exam_link = jQuery(this).data('examschedule');
+    location.href = exam_link;
+  });
+
+
 })

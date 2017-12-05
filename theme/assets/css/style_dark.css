@@ -139,8 +139,9 @@ File: Main Css
 .side-menu {
   bottom: 0;
   top: 0;
-  width: 240px;
-  z-index: 2; }
+  width: 300px;
+  z-index: 2; 
+}
   .side-menu .waves-effect.waves-primary .waves-ripple {
     background-color: rgba(255, 255, 255, 0.1); }
 
@@ -159,10 +160,10 @@ body.fixed-left .side-menu.left {
   position: fixed; }
 
 .content-page {
-  margin-left: 240px;
+  margin-left: 300px;
   overflow: hidden; }
 
-.content-page > .content {
+.content-page > .content, .content-page-instruction > .content {
   margin-bottom: 60px;
   margin-top: 70px;
   padding: 20px 5px 15px 5px; }
