@@ -35,13 +35,10 @@ class Exam extends MY_Controller {
 		if( $schedule_data = canTakeExam($schedule_id, $this->auth_user_id, date('Y-m-d H:i:s')) ) {
 
 			$data['schedule_data'] = $schedule_data;
-
 			$exam_id = ( isset($schedule_data->exam_id) && $schedule_data->exam_id ) ? $schedule_data->exam_id : 0;
 			$data['questions'] = getExamQuestions($exam_id);
 			//$data = getCandidateQuestionData($schedule_id, $this->auth_user_id, $data['questions']);
-
 			$data['final_foot'] = "<script type='text/javascript'>var questions =".json_encode($data['questions'])."</script>";
-
 			$page_content = $this->load->view('exam/schedule/schedule', $data, TRUE);
 		}
 		

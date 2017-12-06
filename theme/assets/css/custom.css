@@ -11,3 +11,66 @@
   color: #58666e;
   padding: 20px;
 }
+
+
+
+
+#question-navigator{
+    height: calc(100% - 192px);
+    bottom:200px;
+    margin-bottom:5px;
+    text-align:center;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+#question-navigator h4{
+    text-align:left;
+    margin-left:15px;
+}
+#navigator-in li {
+    list-style-type: none;
+    margin-right: 2px;
+    display: inline-block;
+    height: 32px;
+    min-width: 35px;
+    cursor: pointer;
+    width:44px;
+}
+#navigator-in li span{
+    padding: 9px 0px;
+    display: block;
+    position: relative;
+    float: left;
+    color:#000;
+    width:100%;
+    text-align:center;
+}
+#navigator-in {
+    padding:0px 4px;
+    text-align: left;
+    margin: 10px 0px 0px 2px;
+}
+#navigator-in .notvisited{
+    background: #9c9c9c;
+    border-radius: 8px;
+}
+#navigator-in .attempted{
+    background: url("../../studenttest/icon.png");
+    background-position: -68px -2px;
+}
+#navigator-in .notanswer{
+    background: url("../../studenttest/icon.png");
+    background-position: -27px -2px;
+}
+#navigator-in .reviewnext{
+    background: url("../../studenttest/icon.png");
+    background-position: -27px -38px;
+}
+#navigator-in .attemptedreview{
+    background: url("../../studenttest/icon.png");
+    background-position: -66px -75px;
+}
+.btn-group{
+    float: right;
+    margin-right: 10px;
+}
