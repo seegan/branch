@@ -24,3 +24,12 @@ function launchApplication(l_url, l_windowName)
         launchApplication.winRefs[l_windowName].focus()
     }
 }
+
+
+jQuery(document).ready(function(){
+
+  var qus_str = questions.questions;
+  question = qus_str.split(',');
+  console.log(question);
+  
+});

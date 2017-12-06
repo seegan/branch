@@ -19,6 +19,126 @@ if( ! function_exists('hasBranchAccess') )
 	}
 }
 
+if( ! function_exists('canTakeExam') )
+{
+	function canTakeExam($schedule_id = 0, $user_id = 0, $data_time = '0000-00-00')
+	{
+		$CI =& get_instance();
+		if($schedule_data = $CI->common->scheduleAvailToTake($schedule_id, $data_time)) {
+			if( scheduleAvailToCandidate($schedule_id, $user_id, $schedule_data->schedule_to) ) {
+				return $schedule_data;
+			}
+		}
+		return false;
+	}
+}
+
+
+if( ! function_exists('scheduleAvailToCandidate') )
+{
+	function scheduleAvailToCandidate($schedule_id = 0, $user_id = 0, $schedule_to = 2)
+	{
+		$CI =& get_instance();
+		if( $CI->common->scheduleAvailToCandidate($schedule_id, $user_id) ) {
+			if($schedule_to != 1) {
+				return checkScheduleAvailToSelectedCandidate($schedule_id, $user_id);
+			}
+			return true;
+		}
+		return false;
+	}
+}
+
+if( ! function_exists('checkScheduleAvailToSelectedCandidate') )
+{
+	function checkScheduleAvailToSelectedCandidate($schedule_id = 0, $user_id = 0)
+	{
+		$CI =& get_instance();
+		if( $schedule_candidates = $CI->common->getScheduleCandidateDetail($schedule_id) ) {
+			$unseri_data = unserialize($schedule_candidates->candidates);
+			if(is_array($unseri_data) && count($unseri_data) > 0 && in_array_r($user_id, $unseri_data)) {
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
+
+
+//Collect Question Ids from Exam Question table
+if( ! function_exists('getExamQuestions') )
+{
+	function getExamQuestions($exam_id = 0)
+	{
+		$CI =& get_instance();
+		if( $base_data = $CI->common->getExamQuestions($exam_id) ) {
+
+			$seri_questions = $base_data->questions;
+			unset($base_data->questions);
+
+			$question_data = unserialize($seri_questions);
+
+			$data['questions'] = implode(",", array_keys($question_data));
+			$data['question_data'] = combainQuestionOptions($data['questions']);
+			$data['exam_detail'] = $base_data;
+			return $data;
+		}
+		return false;
+	}
+}
+
+
+
+if( ! function_exists('combainQuestionOptions') )
+{
+	function combainQuestionOptions($question_ids)
+	{
+		$CI =& get_instance();
+		$questions = $CI->common->getQuestions($question_ids);
+		$options = $CI->common->getOptions($question_ids);
+
+		$option_gruped = array();
+		foreach ($options as $item) {
+		  // copy item to grouped
+		  $option_gruped[$item['question_id']][] = $item;
+		}
+
+		$question_gruped = array();
+		foreach ($questions as $item) {
+		  // copy item to grouped
+			$item['options'] = $option_gruped[$item['question_id']];
+		  	$question_gruped[$item['question_id']] = $item;
+		}
+		return $question_gruped;
+	}
+}
+
+
+
+
+
+if( ! function_exists('getCandidateQuestionData') )
+{
+	function getCandidateQuestionData($schedule_id, $candidate_id, $questions)
+	{
+		$CI =& get_instance();
+		$questions = implode(",", array_keys($questions));
+
+		var_dump($questions);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 if( ! function_exists('getBatchCurrentExams') )
