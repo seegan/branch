@@ -9,6 +9,7 @@
 
 <?php
 $question_ids = explode(",", $questions['questions']);
+asort($question_ids);
 
 ?>
 

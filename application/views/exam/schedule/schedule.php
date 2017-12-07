@@ -4,8 +4,11 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="card-box">
-						<div class="text-center">
-							<h2>General Instructions</h2>
+						<div class="">
+							<h2 class="text-center">General Instructions</h2>
+							<div class="answer-board inner-board">
+								<input type="hidden" id="active_question" value="0">
+							</div>
 						</div>
 					</div>
 
