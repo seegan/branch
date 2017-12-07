@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2017 at 02:21 PM
+-- Generation Time: Dec 07, 2017 at 02:01 PM
 -- Server version: 10.1.13-MariaDB
 -- PHP Version: 5.6.23
 
@@ -99,8 +99,7 @@ CREATE TABLE `auth_sessions` (
 --
 
 INSERT INTO `auth_sessions` (`id`, `user_id`, `login_time`, `modified_at`, `ip_address`, `user_agent`) VALUES
-('tqeqpnuoji1k1k5sdejusgreq13vd49q', 1393196124, '2017-12-06 14:56:05', '2017-12-06 13:17:50', '::1', 'Chrome 62.0.3202.94 on Windows 7'),
-('3et5hk23hgfac9kpcklsl7gnt4k0v7na', 1393196124, '2017-12-06 10:25:45', '2017-12-06 07:51:16', '::1', 'Chrome 62.0.3202.94 on Windows 7');
+('i0ouktuf2lkfvulfrr3afb0gl6r8lstj', 1393196124, '2017-12-07 10:12:33', '2017-12-07 12:56:00', '::1', 'Chrome 62.0.3202.94 on Windows 7');
 
 -- --------------------------------------------------------
 
@@ -309,7 +308,7 @@ INSERT INTO `users` (`user_id`, `username`, `email`, `auth_level`, `banned`, `pa
 (1352098928, '103', 'sfgghjj@fgjh.com', 1, '0', '$2y$11$RHBuCytX7uJETyJQf5KRZ.yk5tsbC7sF/Ny7poG5/TtS84ruDwN2a', NULL, NULL, NULL, NULL, '2017-12-01 08:57:25', '2017-12-01 07:57:25'),
 (1383642353, '525', 'ravi@y.com', 1, '0', '$2y$11$olRlZoEbI.8raj6ID15/S.J1TzJOFlB8lKPRILE9K.jDV0IH9imdC', NULL, NULL, NULL, NULL, '2017-12-01 11:13:10', '2017-12-01 10:13:10'),
 (1384828447, '240', 'agsgdjf@gmm.com', 1, '0', '$2y$11$fILWkJWrLPWOjo1.uTv5nuArBgLxE3NHgq4qzUCX1HsbNxfLKtjGa', NULL, NULL, NULL, NULL, '2017-12-01 12:09:51', '2017-12-01 11:09:51'),
-(1393196124, 'seegan', 'see.gan21see@gmail.com', 1, '0', '$2y$11$jc1cWdQNl9iSkagu13tODuLteMGdJFR2U9nQolJn7MyZrJq6iYkMu', NULL, NULL, NULL, '2017-12-06 14:56:05', '2017-12-04 13:48:05', '2017-12-06 09:26:05'),
+(1393196124, 'seegan', 'see.gan21see@gmail.com', 1, '0', '$2y$11$jc1cWdQNl9iSkagu13tODuLteMGdJFR2U9nQolJn7MyZrJq6iYkMu', NULL, NULL, NULL, '2017-12-07 10:12:33', '2017-12-04 13:48:05', '2017-12-07 04:42:33'),
 (1402460928, '579', 'giri@y.com', 1, '0', '$2y$11$ZhfnuoidJTEiJJZrjgvK2OGKd6eWjJF/S5jDyTn.bVeMkN2coO0f.', NULL, NULL, NULL, '2017-12-04 13:43:00', '2017-12-01 13:31:08', '2017-12-04 12:43:00'),
 (1412604297, '219', '5as715@ss.com', 1, '0', '$2y$11$mably210oA9TpdzWoON7T.nD/00qknFz/C.V3mwg6KoGjrpzTqEB2', NULL, NULL, NULL, NULL, '2017-12-01 11:04:10', '2017-12-01 10:04:10'),
 (1434399577, '118', 'asdffhj34@gmail.com', 1, '0', '$2y$11$mXzk9ayPhVwOmj.jvcE8UuaA24/zzGPL5PUr3Ta0RDNrsjHBxytp2', NULL, NULL, NULL, NULL, '2017-12-01 10:42:50', '2017-12-01 09:42:50'),
@@ -731,6 +730,25 @@ INSERT INTO `xtra_candidate` (`user_id`, `name`, `enrollment_no`, `ref_pass`, `m
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `xtra_candidate_attended_schedule`
+--
+
+CREATE TABLE `xtra_candidate_attended_schedule` (
+  `id` int(11) NOT NULL,
+  `user_id` bigint(11) NOT NULL,
+  `schedule_id` bigint(11) NOT NULL,
+  `time_taken` bigint(11) NOT NULL,
+  `positive_marks` decimal(10,2) NOT NULL,
+  `negative_marks` decimal(10,2) NOT NULL,
+  `total_marks` decimal(10,2) NOT NULL,
+  `answer_data` datetime NOT NULL,
+  `last_update` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `active` int(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `xtra_candidate_branch_batch`
 --
 
@@ -993,12 +1011,12 @@ CREATE TABLE `xtra_exam_schedule` (
 --
 
 INSERT INTO `xtra_exam_schedule` (`id`, `exam_id`, `schedule_name`, `description`, `start_date`, `end_date`, `result_date`, `offered_as`, `offer_cost`, `result_as`, `schedule_to`, `created_at`, `modified_at`, `active`) VALUES
-(1, 1, 'Test Schedule', '<p>yuytu</p>', '2017-12-04 00:00:00', '2017-12-05 22:30:00', '2017-12-06 01:00:00', 'paid', '10.00', 'auto', 2, '2017-12-02 21:06:28', '0000-00-00 00:00:00', 0),
+(1, 1, 'Test Schedule', '<p>yuytu</p>', '2017-12-04 00:00:00', '2017-12-05 22:30:00', '2017-12-20 01:00:00', 'paid', '10.00', 'auto', 2, '2017-12-02 21:06:28', '2017-12-07 14:46:05', 0),
 (2, 2, 'English 2017', '<p>fdgfdg</p>', '2017-12-03 00:30:00', '2017-12-04 08:00:00', '2017-12-05 02:00:00', 'paid', '10.00', 'manual', 2, '2017-12-02 21:09:31', '0000-00-00 00:00:00', 1),
 (3, 2, 'English 2017', '<p>fdgfdg</p>', '2017-12-03 01:30:00', '2017-12-04 08:00:00', '2017-12-05 02:00:00', 'paid', '10.00', 'manual', 2, '2017-12-02 21:10:33', '0000-00-00 00:00:00', 1),
 (4, 2, 'English 2017', '<p>fdgfdg</p>', '2017-12-03 23:59:00', '2017-12-04 08:00:00', '2017-12-05 02:00:00', 'paid', '10.00', 'manual', 2, '2017-12-02 21:10:53', '0000-00-00 00:00:00', 1),
 (5, 2, 'test schedule', '<p>jhghj</p>', '2017-12-04 01:00:00', '2017-12-06 18:00:00', '2017-12-06 09:00:00', 'free', '0.00', 'auto', 2, '2017-12-03 06:35:31', '2017-12-06 12:34:03', 1),
-(6, 2, 'Seegan Test', '<p>drytryt</p>', '2017-12-05 14:00:00', '2017-12-07 14:00:00', '2017-12-07 01:30:00', 'paid', '10.00', 'auto', 2, '2017-12-04 13:51:12', '2017-12-06 14:56:44', 1);
+(6, 2, 'Seegan Test', '<p>drytryt</p>', '2017-12-05 14:00:00', '2017-12-21 14:00:00', '2017-12-07 01:30:00', 'paid', '10.00', 'auto', 2, '2017-12-04 13:51:12', '2017-12-07 14:46:22', 1);
 
 -- --------------------------------------------------------
 
@@ -1741,6 +1759,12 @@ ALTER TABLE `xtra_candidate`
   ADD KEY `user_id_4` (`user_id`);
 
 --
+-- Indexes for table `xtra_candidate_attended_schedule`
+--
+ALTER TABLE `xtra_candidate_attended_schedule`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `xtra_category`
 --
 ALTER TABLE `xtra_category`
@@ -1831,6 +1855,11 @@ ALTER TABLE `xtra_branch`
 --
 ALTER TABLE `xtra_branch_subject`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+--
+-- AUTO_INCREMENT for table `xtra_candidate_attended_schedule`
+--
+ALTER TABLE `xtra_candidate_attended_schedule`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `xtra_category`
 --
