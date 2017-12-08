@@ -41,7 +41,7 @@ class Exam extends MY_Controller {
 			$data['final_foot'] = "<script type='text/javascript'>var questions =".json_encode($data['questions'])."</script>";
 			$page_content = $this->load->view('exam/schedule/schedule', $data, TRUE);
 		}
-		
+
 		$left_sidebar = $this->load->view('exam/common/left_sidebar', '', TRUE);
 		$right_sidebar = $this->load->view('exam/common/right_sidebar', '', TRUE);
 
