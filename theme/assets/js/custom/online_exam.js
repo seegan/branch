@@ -69,8 +69,18 @@ jQuery(document).ready(function(){
       activeQuestionChange(question_id);
       jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('notanswered')
     }
-
-
+    var changeToAnswered = function(question_id ) {
+      activeQuestionChange(question_id);
+      jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('answered')
+    }
+    var changeToReview = function(question_id ) {
+      activeQuestionChange(question_id);
+      jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('reviewnext')
+    }
+    var changeToReviewMark = function(question_id ) {
+      activeQuestionChange(question_id);
+      jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('attemptedreview')
+    }
 
 
     var makeQuestionBlock = function(data, order_no) {
@@ -79,7 +89,7 @@ jQuery(document).ready(function(){
       $.each(data.options, function( key, value ) {
           option_html += "<div class='question_options'>";
           option_html += "  <div class='radio radio-success'>";
-          option_html += "    <input id='radio-"+value.option_id+"' type='radio' name='"+value.question_id+"' value='"+value.option_id+"'>";
+          option_html += "    <input id='radio-"+value.option_id+"' type='radio' name='single_option["+value.question_id+"]' value='"+value.option_id+"' class='single-option'>";
           option_html += "    <label for='radio-"+value.option_id+"'>";
           option_html +=          value.option_val;
           option_html += "    </label>";
@@ -98,7 +108,7 @@ jQuery(document).ready(function(){
           html += "       </div>";
           html += "       <div style='clear:both;'></div>";
           html += "     </div>";
-          html += "     <div>";
+          html += "     <div class='option-main' data-optionquestion='"+data.question_id+"'>";
           html +=         option_html;
           html += "     </div>";
           html += "   </div>";
@@ -132,6 +142,8 @@ jQuery(document).ready(function(){
 
       },
 
+
+
       'createBoard':function() {
         var order_no = 1;
         var b_html = "";
@@ -140,15 +152,49 @@ jQuery(document).ready(function(){
           $Board.append(b_html);
           order_no++;
         });
+      },
+      'onValueChange': function() {
+        jQuery('.single-option').on('change', function(){
+          var option_main = jQuery(this).parent().parent().parent();
+          var question_id = jQuery(option_main).data('optionquestion');
+          var checked = jQuery(option_main).find('.single-option').is(':checked');
+          if(checked) {
+            changeToAnswered(question_id);
+          } else {
+            changeToNotAnswered(question_id);
+          }
+        })
+      },
+      'onClearResponse': function() {
+        jQuery('.clear_response').on('click', function(){
+          var question_id = jQuery('#active_question').val();
+          jQuery('[data-optionquestion='+question_id+']').find('.single-option').prop('checked', false).change();
+        });
+      },
+
+      'onReviewQuestion': function() {
+        jQuery('.review_stay').on('click', function(){
+          var question_id = jQuery('#active_question').val();
+          var is_checked = jQuery('[data-optionquestion='+question_id+']').find('.single-option').prop('checked');
+          if(is_checked) {
+            changeToReviewMark(question_id);
+          }else {
+            changeToReview(question_id);
+          }
+        });
         
       },
+
+
       'init':function(){
           $jquery.each(function(){
             var _this = this;
             _this.$this = $(this);
 
             output.createBoard();
-
+            output.onValueChange();
+            output.onClearResponse();
+            output.onReviewQuestion();
             //var privatefun = function(){ console.log('inside private');  }
             
             _this.$this.find('#navigator-in li').on('click',function(){
@@ -163,17 +209,21 @@ jQuery(document).ready(function(){
                     changeToNotAnswered(question_id);
                     break;
                   case 'notanswered':
+                    activeQuestionChange(question_id);
                     break;
                   case 'answered':
+                    activeQuestionChange(question_id);
                     break;
                   case 'review':
+                    activeQuestionChange(question_id);
                     break;
                   case 'answeredreview':
+                    activeQuestionChange(question_id);
                     break;
                   default:
                     break;
                 }
-                console.log()
+
             });
 
 

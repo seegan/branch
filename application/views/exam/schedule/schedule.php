@@ -1,4 +1,4 @@
-<div class="content-page">
+<div class="content-page exam-content">
 	<div class="content">
 		<div class="container-fluid">
 			<div class="row">
@@ -16,18 +16,33 @@
 			</div>
 
 		</div>
-	</div>	
-</div>
-<div class="instruction-footer">
-	<div class="instruction-foot-content">
-		<div class="form-group text-right m-b-0">
-			<div class="checkbox checkbox-success form-check-inline">
-			    <input type="checkbox" id="inlineCheckbox2" value="option1">
-			    <label for="inlineCheckbox2"> I have Read And Understood the above Instruction </label>
-			</div>
-            <button class="btn btn-primary waves-effect waves-light take_schedule_btn" type="button" data-examschedule="<?php echo base_url('online/exam/schedule').'/6'?>">
-                Take Exam <i class="ion-arrow-right-b"></i>
-            </button>
-        </div>
 	</div>
+
+
+
+
+	<div class="instruction-footer">
+		<div class="instruction-foot-content">
+			<div class="form-group m-b-0">
+				<div class="row">
+					<div class="col-lg-3">
+						<button class="btn btn-primary waves-effect waves-light" type="button" >Previous <i class="ion-arrow-left-b"></i></button>
+						<button class="btn btn-primary waves-effect waves-light" type="button" >Next <i class="ion-arrow-right-b"></i></button>
+					</div>
+					<div class="col-lg-7">
+						<button class="btn btn-primary waves-effect waves-light clear_response" type="button">Clear Response</button>
+						<button class="btn btn-primary waves-effect waves-light review_next" type="button">Mark for Review & Next</button>
+						<button class="btn btn-primary waves-effect waves-light" type="button" >Save & Continue Later</button>
+					</div>
+					<div class="col-lg-2">
+						<div class="text-right">
+							<button class="btn btn-primary waves-effect waves-light" type="button" >Submit</button>
+						</div>
+					</div>
+				</div>
+	            
+	        </div>
+		</div>
+	</div>
+
 </div>

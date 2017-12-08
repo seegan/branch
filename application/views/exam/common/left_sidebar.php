@@ -30,6 +30,18 @@ asort($question_ids);
             }
         ?> 
     </ul>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="left-full">
+                <button class="btn btn-primary waves-effect waves-light review_stay" type="button" >Review Question </button>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="left-full">
+                <button class="btn btn-info waves-effect waves-light" type="button" >Instruction </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 
