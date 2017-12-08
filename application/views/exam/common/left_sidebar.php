@@ -5,12 +5,9 @@
                     <!--- Divider -->
                     <div id="sidebar-menu">
 
-
-
 <?php
 $question_ids = explode(",", $questions['questions']);
 asort($question_ids);
-
 ?>
 
 
@@ -23,6 +20,8 @@ asort($question_ids);
         ?>
             <li class="notvisited" class="question_btn" data-questionid="<?php echo $q_value; ?>">
                 <span style="top: 0px;"><?php echo $i; ?></span>
+                <input type="hidden" class="attend_status" value="notvisited" name="question_status[<?php echo $q_value; ?>][attend_status]">
+                <input type="hidden" class="active_status" value="0" name="question_status[<?php echo $q_value; ?>][active_status]">
             </li>
         <?php
                     $i++;

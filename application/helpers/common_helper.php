@@ -272,3 +272,43 @@ if( ! function_exists('man_to_machine_date') )
 		return date("Y-m-d H:i:s", strtotime($date_time));
 	}
 }
+
+
+
+if( ! function_exists('setCandidateAttendSchedule') )
+{
+	function setCandidateAttendSchedule($schedule_id, $user_id, $date_time) {
+
+		$hash = get_unused_exam_hash();
+		$ans_data = serialize(array());
+
+		$data = array('user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash, 'last_update' => $date_time);
+
+
+		/*$CI->db->set($batch_data)->insert(db_table('batch_table'));
+		if( $CI->db->affected_rows() == 1 ){
+
+		}*/
+		var_dump("seegan find");
+var_dump($data); die();
+
+
+		//return date("Y-m-d H:i:s", strtotime($date_time));
+	}
+}
+
+
+if( ! function_exists('get_unused_exam_hash') )
+{
+	function get_unused_exam_hash() { 
+
+		$CI =& get_instance();
+	    $random_unique_int = 2147483648 + mt_rand( -2147482448, 2147483647 );
+	    $hash_data = 'XTRA'.date("y").$random_unique_int;
+
+		if( $CI->common->checkExamHash($hash_data) ) {
+			return get_unused_exam_hash();
+		}
+		return $hash_data;
+	}
+}

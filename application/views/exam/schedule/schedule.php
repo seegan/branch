@@ -26,8 +26,8 @@
 			<div class="form-group m-b-0">
 				<div class="row">
 					<div class="col-lg-3">
-						<button class="btn btn-primary waves-effect waves-light" type="button" >Previous <i class="ion-arrow-left-b"></i></button>
-						<button class="btn btn-primary waves-effect waves-light" type="button" >Next <i class="ion-arrow-right-b"></i></button>
+						<button class="btn btn-primary waves-effect waves-light move_prev" type="button"><i class="ion-arrow-left-b"></i> Previous</button>
+						<button class="btn btn-primary waves-effect waves-light move_next" type="button">Next <i class="ion-arrow-right-b"></i></button>
 					</div>
 					<div class="col-lg-7">
 						<button class="btn btn-primary waves-effect waves-light clear_response" type="button">Clear Response</button>

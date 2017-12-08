@@ -60,6 +60,9 @@
     width:100%;
     text-align:center;
 }
+#navigator-in li span.active {
+    font-weight: bold;
+}
 #navigator-in {
     padding:0px 4px;
     text-align: left;
@@ -92,7 +95,7 @@
     border: 2px solid #32317d;
 }
 #navigator-in .attemptedreview:before {
-content: "";
+    content: "";
     width: 10px;
     height: 10px;
     position: absolute;
@@ -101,6 +104,7 @@ content: "";
     background: #66bb6a;
     border-radius: 10px;
     border: 1px solid #409c10;
+   /*background-image: url('images/tick.png');*/
 }
 .btn-group{
     float: right;

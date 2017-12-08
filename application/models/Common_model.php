@@ -70,4 +70,15 @@ class Common_model extends MY_Model {
 
 
 
+
+
+
+
+
+
+	public function checkExamHash($hash = '') {
+		$query = $this->db->query("SELECT so.schedule_hash FROM xtra_candidate_attended_schedule as so WHERE so.schedule_hash = '${hash}'");
+		return $query->row();
+	}
+
 }

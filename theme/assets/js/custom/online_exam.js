@@ -56,31 +56,102 @@ jQuery(document).ready(function(){
     var $jquery = element;
     var $Board = $(settings.container);
 
+
+
+    var collectAndSubmit = function (time) {
+      console.log('time_submit');
+    }
+
+    var collectExamData = function (time) {
+
+      //localStorage.removeItem('favoriteflavor');
+
+      var nav_prev_data = localStorage.getItem('navigator_data');
+      var board_prev_data = localStorage.getItem('board_data');
+      
+      if( nav_prev_data == $('#question-navigator :input').serialize() && board_prev_data == $('.answer-board.inner-board :input').serialize()) {
+        collectAndSubmit();
+      } else {
+        jQuery.ajax({
+            url: filter_ajaxurl,
+            type: 'POST',
+            dataType: "json",
+            showAutocompleteOnFocus : true,
+            autoFocus: true,
+            selectFirst: true,
+            data: {
+                'action': 'examDataSubmit',
+                'navigator_data' : $('#question-navigator :input').serialize(),
+                'board_data' : $('.answer-board.inner-board :input').serialize(),
+            },
+            success: function( data ) {
+              
+            }
+        });
+      }
+
+      localStorage.setItem('navigator_data',$('#question-navigator :input').serialize());
+      localStorage.setItem('board_data',$('.answer-board.inner-board :input').serialize());
+
+
+
+
+    }
+
+
+
+
+
     var activeQuestionChange = function(questionid) {
       var question_id = '#question_'+questionid;
       $Board.find('.block_questions').css('display', 'none');
       $Board.find(question_id).css('display', 'block');
-
       $Board.find('#active_question').val(questionid);
+
+      jQuery('#question-navigator li').find('.active').removeClass('active');
+      jQuery('#question-navigator li').find('.active_status').val('0');
+
+      jQuery('[data-questionid="'+questionid+'"]').find('span').addClass('active');
+      jQuery('[data-questionid="'+questionid+'"]').find('.active_status').val('1');
+
+      collectExamData();
     }
-
-
     var changeToNotAnswered = function(question_id ) {
+      jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('notanswered');
+      jQuery('[data-questionid="'+question_id+'"]').find('.attend_status').val('notanswered');
       activeQuestionChange(question_id);
-      jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('notanswered')
+    }
+    var changeToNotAnsweredClear = function(question_id ) {
+      jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('notanswered');
+      jQuery('[data-questionid="'+question_id+'"]').find('.attend_status').val('notanswered');
+      activeQuestionChange(question_id);
     }
     var changeToAnswered = function(question_id ) {
+      jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('answered');
+      jQuery('[data-questionid="'+question_id+'"]').find('.attend_status').val('answered');
       activeQuestionChange(question_id);
-      jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('answered')
     }
-    var changeToReview = function(question_id ) {
-      activeQuestionChange(question_id);
-      jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('reviewnext')
+    var changeToReview = function(question_id, action ) {
+      jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('reviewnext');
+      jQuery('[data-questionid="'+question_id+'"]').find('.attend_status').val('reviewnext');
+      
+      if(action == 'stay') {
+        activeQuestionChange(question_id);
+      }
+
     }
-    var changeToReviewMark = function(question_id ) {
-      activeQuestionChange(question_id);
-      jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('attemptedreview')
+    var changeToReviewMark = function(question_id, action ) {
+      jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('attemptedreview');
+      jQuery('[data-questionid="'+question_id+'"]').find('.attend_status').val('attemptedreview');
+      
+      if(action == 'stay') {
+        activeQuestionChange(question_id);
+      }
+
     }
+
+
+
 
 
     var makeQuestionBlock = function(data, order_no) {
@@ -119,29 +190,61 @@ jQuery(document).ready(function(){
     };
 
 
-
-
+    var moveToNext = function(question_id ) {
+      var current_li_sel = jQuery('[data-questionid='+question_id+']');
+      var total_li = jQuery( "#navigator-in li" ).length;
+      var index = jQuery( "#navigator-in li" ).index( current_li_sel );
+      var curent_order = index+1;
+      var current_question = 0;
+      if(curent_order >= total_li) {
+        current_question = jQuery( "#navigator-in li" ).first().data('questionid');
+        jQuery('[data-questionid='+current_question+']').trigger( 'click' );
+      } else {
+        current_question = jQuery(current_li_sel).next().data('questionid');
+        jQuery('[data-questionid='+current_question+']').trigger( 'click' );
+      }
+    }
+    var moveToPrev = function(question_id ) {
+      var current_li_sel = jQuery('[data-questionid='+question_id+']');
+      var total_li = jQuery( "#navigator-in li" ).length;
+      var index = jQuery( "#navigator-in li" ).index( current_li_sel );
+      var curent_order = index+1;
+      var current_question = 0;
+      if(curent_order == 1) {
+        current_question = jQuery( "#navigator-in li" ).last().data('questionid');
+        jQuery('[data-questionid='+current_question+']').trigger( 'click' );
+      } else {
+        current_question = jQuery(current_li_sel).prev().data('questionid');
+        jQuery('[data-questionid='+current_question+']').trigger( 'click' );
+      }   
+    }
 
 
     var output = {
-      //Setup our plugin functions as an object elements
-      'collectExamData':function(){
-        privateMethod();
-      },
-      'collectAndSubmit':function(){
-        privateMethod();
-      },
-      'listener':function(param){
-        var time = 10000000;
-          delta = 5000,
 
+      'listener':function(param){
+          delta = 10000,
           window.tid = setInterval(function() {
-          time -= delta;
-              output.collectAndSubmit(time);       
+              //output.collectAndSubmit(time);       
+              collectAndSubmit('test');       
           }, delta);
 
       },
 
+
+
+      'toNextQuestion': function() {
+        jQuery('.move_next').on('click', function(){
+          var current_question = jQuery('#active_question').val();
+          moveToNext(current_question);
+        });
+      },
+      'toPrevQuestion': function() {
+        jQuery('.move_prev').on('click', function(){
+          var current_question = jQuery('#active_question').val();
+          moveToPrev(current_question);
+        });
+      },
 
 
       'createBoard':function() {
@@ -160,37 +263,52 @@ jQuery(document).ready(function(){
           var checked = jQuery(option_main).find('.single-option').is(':checked');
           if(checked) {
             changeToAnswered(question_id);
-          } else {
+          } /*else {
             changeToNotAnswered(question_id);
-          }
+          }*/
         })
       },
       'onClearResponse': function() {
         jQuery('.clear_response').on('click', function(){
           var question_id = jQuery('#active_question').val();
-          jQuery('[data-optionquestion='+question_id+']').find('.single-option').prop('checked', false).change();
+          jQuery('[data-optionquestion='+question_id+']').find('.single-option').prop('checked', false);
+          changeToNotAnsweredClear(question_id);
         });
       },
 
-      'onReviewQuestion': function() {
+      'onReviewQuestion': function() { 
+
         jQuery('.review_stay').on('click', function(){
           var question_id = jQuery('#active_question').val();
-          var is_checked = jQuery('[data-optionquestion='+question_id+']').find('.single-option').prop('checked');
+          var is_checked = jQuery('[data-optionquestion='+question_id+']').find('.single-option').is(':checked');
           if(is_checked) {
-            changeToReviewMark(question_id);
+            changeToReviewMark(question_id, 'stay');
           }else {
-            changeToReview(question_id);
+            changeToReview(question_id, 'stay');
           }
         });
-        
+
+        jQuery('.review_next').on('click', function(){
+          var question_id = jQuery('#active_question').val();
+          var is_checked = jQuery('[data-optionquestion='+question_id+']').find('.single-option').is(':checked');
+          if(is_checked) {
+            changeToReviewMark(question_id, 'move');
+          }else {
+            changeToReview(question_id, 'move');
+          }
+          moveToNext(question_id);
+        });
       },
+
+
 
 
       'init':function(){
           $jquery.each(function(){
             var _this = this;
             _this.$this = $(this);
-
+            output.toNextQuestion();
+            output.toPrevQuestion();
             output.createBoard();
             output.onValueChange();
             output.onClearResponse();
@@ -199,9 +317,12 @@ jQuery(document).ready(function(){
             
             _this.$this.find('#navigator-in li').on('click',function(){
 
-                //clearInterval(window.tid);
-                //output.listener();
-                //console.log(output.collectExamData());
+
+                //Timer Reset when li click
+                clearInterval(window.tid);
+                output.listener();
+
+
                 var question_id = $(this).data('questionid');
                 var question_status = $(this).attr('class');
                 switch(question_status) {
@@ -214,10 +335,10 @@ jQuery(document).ready(function(){
                   case 'answered':
                     activeQuestionChange(question_id);
                     break;
-                  case 'review':
+                  case 'reviewnext':
                     activeQuestionChange(question_id);
                     break;
-                  case 'answeredreview':
+                  case 'attemptedreview':
                     activeQuestionChange(question_id);
                     break;
                   default:

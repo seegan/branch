@@ -19,7 +19,7 @@
         <script src="<?php echo base_url(); ?>theme/assets/js/modernizr.min.js"></script>
         <script type="text/javascript">
             var site_url = "<?php echo base_url(); ?>";
-            var filter_ajaxurl = "<?php echo base_url('candidate/CandidateAjax'); ?>";
+            var filter_ajaxurl = "<?php echo base_url('online/ExamAjax'); ?>";
         </script>
 
         <?php
