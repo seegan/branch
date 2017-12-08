@@ -8,6 +8,9 @@
 							<h2 class="text-center">General Instructions</h2>
 							<div class="answer-board inner-board">
 								<input type="hidden" id="active_question" value="0">
+								<input type="hidden" id="hash_code" value="<?php echo $hash_code; ?>">
+								<input type="hidden" id="schedule_id" value="<?php echo $schedule_data->schedule_id; ?>">
+
 							</div>
 						</div>
 					</div>

@@ -83,6 +83,9 @@ jQuery(document).ready(function(){
                 'action': 'examDataSubmit',
                 'navigator_data' : $('#question-navigator :input').serialize(),
                 'board_data' : $('.answer-board.inner-board :input').serialize(),
+                'hash_code' : $('#hash_code').val(),
+                'schedule_status' : 'open',
+                'schedule_id' : $('#schedule_id').val(),
             },
             success: function( data ) {
               

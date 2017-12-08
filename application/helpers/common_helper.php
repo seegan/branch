@@ -136,11 +136,6 @@ if( ! function_exists('getCandidateQuestionData') )
 
 
 
-
-
-
-
-
 if( ! function_exists('getBatchCurrentExams') )
 {
 	function getBatchCurrentExams($batch_id = 0, $date = '0000-00-00')
@@ -279,21 +274,33 @@ if( ! function_exists('setCandidateAttendSchedule') )
 {
 	function setCandidateAttendSchedule($schedule_id, $user_id, $date_time) {
 
+		$CI =& get_instance();
 		$hash = get_unused_exam_hash();
 		$ans_data = serialize(array());
 
-		$data = array('user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash, 'last_update' => $date_time);
+		$schedule_data = array('user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash, 'last_update' => $date_time);
 
+		$schedule_query = "SELECT cas.id FROM xtra_candidate_attended_schedule as cas WHERE cas.user_id = ${user_id} AND cas.schedule_id = ${schedule_id} AND cas.active = 1";
+		$schedule_attempted = $CI->db->query($schedule_query);
 
-		/*$CI->db->set($batch_data)->insert(db_table('batch_table'));
-		if( $CI->db->affected_rows() == 1 ){
+		if( $data = $schedule_attempted->row() ) {
+			$attend_schedule_id = $data->id;
+			$CI->db->where( array('user_id' => $user_id, 'schedule_id' => $schedule_id));
+			$CI->db->update('xtra_candidate_attended_schedule', $schedule_data); 
+		} else {
+			$CI->db->set($schedule_data)->insert('xtra_candidate_attended_schedule');
+			if( $CI->db->affected_rows() != 1 ){
+				return false;
+			}
+			$attend_schedule_id = $CI->db->insert_id();
+		}
 
-		}*/
-		var_dump("seegan find");
-var_dump($data); die();
-
-
-		//return date("Y-m-d H:i:s", strtotime($date_time));
+		$attend_data = array('attend_schedule_id' => $attend_schedule_id,'user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash, 'taken_from' => $date_time, 'taken_to' => $date_time, 'answer_data' => $ans_data, 'schedule_status' => 'open');
+		$CI->db->set($attend_data)->insert('xtra_candidate_attended_data');
+		if( $CI->db->affected_rows() != 1 ){
+			return false;
+		}
+		return $hash;
 	}
 }
 

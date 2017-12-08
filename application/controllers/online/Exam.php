@@ -34,23 +34,17 @@ class Exam extends MY_Controller {
 		if( $schedule_data = canTakeExam($schedule_id, $this->auth_user_id, date('Y-m-d H:i:s')) ) {
 
 
-			$data['attend_data'] = setCandidateAttendSchedule($schedule_id, $this->auth_user_id, date('Y-m-d H:i:s'));
-
-
+			$data['hash_code'] = setCandidateAttendSchedule($schedule_id, $this->auth_user_id, date('Y-m-d H:i:s'));
 			$data['schedule_data'] = $schedule_data;
 			$exam_id = ( isset($schedule_data->exam_id) && $schedule_data->exam_id ) ? $schedule_data->exam_id : 0;
 			$data['questions'] = getExamQuestions($exam_id);
-
-
-			echo "<pre>";
-			var_dump($data['questions']); die();
 
 			//$data = getCandidateQuestionData($schedule_id, $this->auth_user_id, $data['questions']);
 			$data['final_foot'] = "<script type='text/javascript'>var questions =".json_encode($data['questions'])."</script>";
 			$page_content = $this->load->view('exam/schedule/schedule', $data, TRUE);
 		}
 
-		$left_sidebar = $this->load->view('exam/common/left_sidebar', '', TRUE);
+		$left_sidebar = $this->load->view('exam/common/left_sidebar', $data, TRUE);
 		$right_sidebar = $this->load->view('exam/common/right_sidebar', '', TRUE);
 
 		echo $this->load->view('exam/common/header', $data, TRUE);
