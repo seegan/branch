@@ -1,6 +1,10 @@
+.exam-content {
+    position: relative;
+}
 .instruction-footer {
-  position: fixed;
-  width: 100%;
+  position: absolute;
+  right: 0;
+  left:0;
   bottom: 0;
 }
 .instruction-foot-content {
@@ -27,6 +31,13 @@
     text-align:left;
     margin-left:15px;
 }
+
+#question-navigator .left-full {
+    margin-top: 20px;
+}
+#question-navigator .left-full button{
+    width: 100%;
+}
 #navigator-in li {
     list-style-type: none;
     margin-right: 2px;
@@ -35,9 +46,13 @@
     min-width: 35px;
     cursor: pointer;
     width:44px;
+    border: 2px solid #717171;
+}
+#navigator-in li:hover {
+    border: 2px solid #ad9000;
 }
 #navigator-in li span{
-    padding: 9px 0px;
+    padding: 7px 0px;
     display: block;
     position: relative;
     float: left;
@@ -56,21 +71,36 @@
     border-radius: 8px;
 }
 #navigator-in .notanswered{
-    background: #ff0000;
+    background: #f94141;
     border-radius: 8px;
+    border: 2px solid #ab0000;
 }
-#navigator-in .attempted{
-    background: url("../../studenttest/icon.png");
-    background-position: -68px -2px;
+#navigator-in .answered{
+    background: #66bb6a;
+    border-radius: 8px;
+    border: 2px solid #00900b;
 }
 
 #navigator-in .reviewnext{
-    background: url("../../studenttest/icon.png");
-    background-position: -27px -38px;
+    background: #556aff;
+    border-radius: 8px;
+    border: 2px solid #32317d;
 }
 #navigator-in .attemptedreview{
-    background: url("../../studenttest/icon.png");
-    background-position: -66px -75px;
+    background: #556aff;
+    border-radius: 8px;
+    border: 2px solid #32317d;
+}
+#navigator-in .attemptedreview:before {
+content: "";
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    background: #66bb6a;
+    border-radius: 10px;
+    border: 1px solid #409c10;
 }
 .btn-group{
     float: right;

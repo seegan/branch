@@ -21,7 +21,6 @@ class Exam extends MY_Controller {
 		} else {
 			$page_content = 'Not Available';
 		}
-
 		echo $this->load->view('exam/common/header', $data, TRUE);
 		echo $page_content;
 		echo $this->load->view('exam/common/footer', '', TRUE);
