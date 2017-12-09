@@ -19,6 +19,8 @@
         <script src="<?php echo base_url(); ?>theme/assets/js/waves.js"></script>
         <script src="<?php echo base_url(); ?>theme/assets/js/jquery.core.js"></script>
         <script src="<?php echo base_url(); ?>theme/assets/js/jquery.app.js"></script>
+        
+        <script src="<?php echo base_url(); ?>theme/assets/js/jquery.countdownTimer.js"></script>
 
         <?php
             // Add any javascripts

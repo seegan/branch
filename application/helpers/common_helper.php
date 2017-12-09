@@ -19,6 +19,9 @@ if( ! function_exists('hasBranchAccess') )
 	}
 }
 
+
+// End of Can Take Exam Check
+
 if( ! function_exists('canTakeExam') )
 {
 	function canTakeExam($schedule_id = 0, $user_id = 0, $data_time = '0000-00-00')
@@ -63,7 +66,25 @@ if( ! function_exists('checkScheduleAvailToSelectedCandidate') )
 		return false;
 	}
 }
+// End of Can Take Exam Check
 
+
+// End of Can Submit Exam Check
+
+if( ! function_exists('timeAvailToTakeExam') )
+{
+	function timeAvailToTakeExam($schedule_id = 0, $user_id = 0)
+	{
+		$CI =& get_instance();
+		$time_remain = $CI->common->scheduleTimeRemainToCandidate($schedule_id, $user_id);
+		if( $time_remain && !$CI->common->scheduleCandidateSubmitStatus($schedule_id, $user_id)) {
+			return $time_remain;
+		}
+		return false;
+	}
+}
+
+// End of Can Submit Exam Check
 
 
 //Collect Question Ids from Exam Question table
@@ -120,12 +141,13 @@ if( ! function_exists('combainQuestionOptions') )
 
 if( ! function_exists('getCandidateQuestionData') )
 {
-	function getCandidateQuestionData($schedule_id, $candidate_id, $questions)
+	function getCandidateQuestionData($schedule_id, $candidate_id)
 	{
 		$CI =& get_instance();
-		$questions = implode(",", array_keys($questions));
-
-		var_dump($questions);
+		if( $data = $CI->common->getAttendedScheduleDetail($schedule_id, $candidate_id) ) {
+			return unserialize( $data->answer_data );
+		}
+		return false;
 	}
 }
 

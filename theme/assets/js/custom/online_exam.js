@@ -26,13 +26,13 @@ function launchApplication(l_url, l_windowName)
 }
 
 
-jQuery(document).ready(function(){
+/*jQuery(document).ready(function(){
 
   var qus_str = questions.questions;
   question = qus_str.split(',');
   console.log(question);
   
-});
+});*/
 
 
 
@@ -97,15 +97,13 @@ jQuery(document).ready(function(){
       localStorage.setItem('board_data',$('.answer-board.inner-board :input').serialize());
 
 
-
-
     }
 
 
 
 
 
-    var activeQuestionChange = function(questionid) {
+    var activeQuestionChange = function(questionid, action='move') {
       var question_id = '#question_'+questionid;
       $Board.find('.block_questions').css('display', 'none');
       $Board.find(question_id).css('display', 'block');
@@ -117,40 +115,47 @@ jQuery(document).ready(function(){
       jQuery('[data-questionid="'+questionid+'"]').find('span').addClass('active');
       jQuery('[data-questionid="'+questionid+'"]').find('.active_status').val('1');
 
-      collectExamData();
+      if(action == 'stay') {
+        collectExamData()
+      }
+      
     }
-    var changeToNotAnswered = function(question_id ) {
+    var changeToNotAnswered = function(question_id, action = 'move') {
       jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('notanswered');
       jQuery('[data-questionid="'+question_id+'"]').find('.attend_status').val('notanswered');
-      activeQuestionChange(question_id);
+
+      if(action == 'stay') {
+        activeQuestionChange(question_id, action);
+      }
     }
     var changeToNotAnsweredClear = function(question_id ) {
       jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('notanswered');
       jQuery('[data-questionid="'+question_id+'"]').find('.attend_status').val('notanswered');
-      activeQuestionChange(question_id);
+      activeQuestionChange(question_id, 'stay');
     }
-    var changeToAnswered = function(question_id ) {
+    var changeToAnswered = function(question_id, action = 'move' ) {
       jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('answered');
       jQuery('[data-questionid="'+question_id+'"]').find('.attend_status').val('answered');
-      activeQuestionChange(question_id);
+      if(action == 'stay') {
+        activeQuestionChange(question_id, action);
+      }
     }
-    var changeToReview = function(question_id, action ) {
+    var changeToReview = function(question_id, action = 'move') {
       jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('reviewnext');
       jQuery('[data-questionid="'+question_id+'"]').find('.attend_status').val('reviewnext');
-      
+
       if(action == 'stay') {
-        activeQuestionChange(question_id);
+        activeQuestionChange(question_id, action);
       }
 
     }
-    var changeToReviewMark = function(question_id, action ) {
+    var changeToReviewMark = function(question_id, action ='move' ) {
       jQuery('[data-questionid="'+question_id+'"]').removeClass().addClass('attemptedreview');
       jQuery('[data-questionid="'+question_id+'"]').find('.attend_status').val('attemptedreview');
-      
-      if(action == 'stay') {
-        activeQuestionChange(question_id);
-      }
 
+      if(action == 'stay') {
+        activeQuestionChange(question_id, action);
+      }
     }
 
 
@@ -161,35 +166,35 @@ jQuery(document).ready(function(){
 
       var option_html = "";
       $.each(data.options, function( key, value ) {
-          option_html += "<div class='question_options'>";
-          option_html += "  <div class='radio radio-success'>";
-          option_html += "    <input id='radio-"+value.option_id+"' type='radio' name='single_option["+value.question_id+"]' value='"+value.option_id+"' class='single-option'>";
-          option_html += "    <label for='radio-"+value.option_id+"'>";
-          option_html +=          value.option_val;
-          option_html += "    </label>";
-          option_html += "  </div>";
-          option_html += "</div>";
+        option_html += "<div class='question_options'>";
+        option_html += "  <div class='radio radio-success'>";
+        option_html += "    <input id='radio-"+value.option_id+"' type='radio' name='single_option["+value.question_id+"]' value='"+value.option_id+"' class='single-option'>";
+        option_html += "    <label for='radio-"+value.option_id+"'>";
+        option_html +=          value.option_val;
+        option_html += "    </label>";
+        option_html += "  </div>";
+        option_html += "</div>";
       });
 
 
       var html = "<div id='question_"+data.question_id+"' class='block_questions'>";
-          html += " <div class='row'>";
-          html += "   <div class='col-lg-12'>";
-          html += "     <div class='question_txt'>";
-          html += "       <div class='question_txt_in'>";
-          html += "         <span class='badge badge-pill badge-primary'>"+order_no+"</span>"
-          html +=           data.question;
-          html += "       </div>";
-          html += "       <div style='clear:both;'></div>";
-          html += "     </div>";
-          html += "     <div class='option-main' data-optionquestion='"+data.question_id+"'>";
-          html +=         option_html;
-          html += "     </div>";
-          html += "   </div>";
-          html += " </div>";
-          html += "</div>";
+        html += " <div class='row'>";
+        html += "   <div class='col-lg-12'>";
+        html += "     <div class='question_txt'>";
+        html += "       <div class='question_txt_in'>";
+        html += "         <span class='badge badge-pill badge-primary'>"+order_no+"</span>"
+        html +=           data.question;
+        html += "       </div>";
+        html += "       <div style='clear:both;'></div>";
+        html += "     </div>";
+        html += "     <div class='option-main' data-optionquestion='"+data.question_id+"'>";
+        html +=         option_html;
+        html += "     </div>";
+        html += "   </div>";
+        html += " </div>";
+        html += "</div>";
 
-         return html;
+       return html;
     };
 
 
@@ -250,6 +255,8 @@ jQuery(document).ready(function(){
       },
 
 
+
+
       'createBoard':function() {
         var order_no = 1;
         var b_html = "";
@@ -259,16 +266,52 @@ jQuery(document).ready(function(){
           order_no++;
         });
       },
+      'setCandidateData':function() {
+        if(candidate_data != false) {
+
+          $.each(candidate_data, function( key, value ){
+            if(value.attend_status == 'notanswered') {
+              changeToNotAnswered(value.question_id, 'move');
+            }
+            if( value.attend_status == 'reviewnext') {
+              var question_id_s = '#question_'+value.question_id;
+              changeToReview(value.question_id, 'move');
+            }
+            if( value.attend_status == 'answered') {
+              var question_id_s = '#question_'+value.question_id;
+              jQuery(question_id_s).find('[value='+value.candidate_answer+']').prop('checked', true);
+              changeToAnswered(value.question_id, 'move');
+            }
+            if( value.attend_status == 'attemptedreview') {
+              var question_id_s = '#question_'+value.question_id;
+              jQuery(question_id_s).find('[value='+value.candidate_answer+']').prop('checked', true);
+              changeToReviewMark(value.question_id, 'move');
+            }
+
+            if(value.active_status == '1') {
+              activeQuestionChange(value.question_id, 'move');
+            }
+          });
+
+        } else {
+          current_question = jQuery( "#navigator-in li" ).first().data('questionid');
+          jQuery('[data-questionid='+current_question+']').trigger( 'click' ).change();
+          changeToNotAnswered(current_question, 'stay');
+        }
+      },
+
+
+
+
+
       'onValueChange': function() {
         jQuery('.single-option').on('change', function(){
           var option_main = jQuery(this).parent().parent().parent();
           var question_id = jQuery(option_main).data('optionquestion');
           var checked = jQuery(option_main).find('.single-option').is(':checked');
           if(checked) {
-            changeToAnswered(question_id);
-          } /*else {
-            changeToNotAnswered(question_id);
-          }*/
+            changeToAnswered(question_id, 'stay');
+          }
         })
       },
       'onClearResponse': function() {
@@ -316,6 +359,7 @@ jQuery(document).ready(function(){
             output.onValueChange();
             output.onClearResponse();
             output.onReviewQuestion();
+            output.setCandidateData();
             //var privatefun = function(){ console.log('inside private');  }
             
             _this.$this.find('#navigator-in li').on('click',function(){
@@ -330,19 +374,19 @@ jQuery(document).ready(function(){
                 var question_status = $(this).attr('class');
                 switch(question_status) {
                   case 'notvisited':
-                    changeToNotAnswered(question_id);
+                    changeToNotAnswered(question_id, 'stay');
                     break;
                   case 'notanswered':
-                    activeQuestionChange(question_id);
+                    activeQuestionChange(question_id, 'stay');
                     break;
                   case 'answered':
-                    activeQuestionChange(question_id);
+                    activeQuestionChange(question_id, 'stay');
                     break;
                   case 'reviewnext':
-                    activeQuestionChange(question_id);
+                    activeQuestionChange(question_id, 'stay');
                     break;
                   case 'attemptedreview':
-                    activeQuestionChange(question_id);
+                    activeQuestionChange(question_id, 'stay');
                     break;
                   default:
                     break;
@@ -351,8 +395,16 @@ jQuery(document).ready(function(){
             });
 
 
+            jQuery('#hms_timer').countdowntimer({
+                hours : time_remain.hour,
+                minutes :time_remain.min,
+                seconds : time_remain.sec,
+                size : "lg",
+                alertFromSec : 480,
+            });
+
             $(window).resize(function() {
-              var board_height = (window.innerHeight) - 250;
+              var board_height = (window.innerHeight) - 275;
               board_height = board_height+'px';
               $(".inner-board").height(board_height);
             }).resize();              
@@ -391,11 +443,6 @@ $('#question-navigator').OnlineTest({
 });
 //var onlinetest = $('#question-navigator').OnlineTest({answer_container:'answer-board'});
 //onlinetest.publicMethod();
-
-
-
-
-
 
 
 

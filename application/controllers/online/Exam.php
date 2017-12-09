@@ -31,16 +31,29 @@ class Exam extends MY_Controller {
 
 		$page_content = 'Not Available';
 
-		if( $schedule_data = canTakeExam($schedule_id, $this->auth_user_id, date('Y-m-d H:i:s')) ) {
+		$time_to_finish = timeAvailToTakeExam($schedule_id, $this->auth_user_id);
+		$exam_schedule_data = canTakeExam($schedule_id, $this->auth_user_id, date('Y-m-d H:i:s'));
 
+
+//var_dump($time_to_finish);  die();
+
+
+		if( $exam_schedule_data && $time_to_finish->time_remain > 0 ) {
+
+			$data['schedule_data'] = $exam_schedule_data;
+			$exam_id = ( isset($exam_schedule_data->exam_id) && $exam_schedule_data->exam_id ) ? $exam_schedule_data->exam_id : 0;
 
 			$data['hash_code'] = setCandidateAttendSchedule($schedule_id, $this->auth_user_id, date('Y-m-d H:i:s'));
-			$data['schedule_data'] = $schedule_data;
-			$exam_id = ( isset($schedule_data->exam_id) && $schedule_data->exam_id ) ? $schedule_data->exam_id : 0;
+			$data['time_remain'] = $time_to_finish->time_remain;
 			$data['questions'] = getExamQuestions($exam_id);
+			$data['attended_data'] = getCandidateQuestionData($schedule_id, $this->auth_user_id);
 
-			//$data = getCandidateQuestionData($schedule_id, $this->auth_user_id, $data['questions']);
-			$data['final_foot'] = "<script type='text/javascript'>var questions =".json_encode($data['questions'])."</script>";
+
+			list($hour, $min, $sec) = explode(":", gmdate("H:i:s", $data['time_remain'])); 
+			$data['final_foot'] = "<script type='text/javascript'>var questions =".json_encode($data['questions'])."; var candidate_data=".json_encode($data['attended_data'])."; var time_remain = {hour:".$hour.",min:".$min.",sec:".$sec."}</script>";
+
+
+
 			$page_content = $this->load->view('exam/schedule/schedule', $data, TRUE);
 		}
 

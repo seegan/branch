@@ -5,12 +5,21 @@
 				<div class="col-lg-12">
 					<div class="card-box">
 						<div class="">
-							<h2 class="text-center">General Instructions</h2>
+							<div class="row">
+								<div class="col-lg-8">
+									<h2 class="text-center">General Instructions</h2>
+								</div>
+								<div class="col-lg-4">
+									<div class="text-center countdown_timer">
+										<span id="hms_timer"></span>
+									</div>
+								</div>
+							</div>
+
 							<div class="answer-board inner-board">
 								<input type="hidden" id="active_question" value="0">
 								<input type="hidden" id="hash_code" value="<?php echo $hash_code; ?>">
 								<input type="hidden" id="schedule_id" value="<?php echo $schedule_data->schedule_id; ?>">
-
 							</div>
 						</div>
 					</div>

@@ -15,7 +15,18 @@
   color: #58666e;
   padding: 20px;
 }
+.countdown_timer {
+    font-size: 28px;
+    color: #3f51b5;
+}
+.blink_me {
+  animation: blinker 1s linear infinite;
+  color: red;
+}
 
+@keyframes blinker {  
+  50% { opacity: 0; }
+}
 
 
 

@@ -36,11 +36,13 @@ class ExamAjax extends MY_Controller {
 
         $ans_data = ( isset($board_data['single_option']) && is_array($board_data['single_option']) && count($board_data['single_option']) ) ? $board_data['single_option'] : false; 
 
+
         $updated_data = [];
         if(isset($navigator_data['question_status']) && is_array($navigator_data['question_status']) && count($navigator_data['question_status'])) {
         	foreach ($navigator_data['question_status'] as $question_id => $n_value) {
         		$ans = ( $ans_data && isset($ans_data[$question_id]) ) ? $ans_data[$question_id] : 0;
         		$n_value['candidate_answer'] = $ans;
+                $n_value['question_id'] = $question_id;
         		$updated_data[] = $n_value;
         	}
         }
@@ -49,13 +51,16 @@ class ExamAjax extends MY_Controller {
 		$this->db->where( array('user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash_code));
 		$this->db->update('xtra_candidate_attended_schedule', $schedule_data1);
 
-
         $schedule_data2 = array('taken_to' => $update_time, 'schedule_status' => $schedule_status, 'answer_data' => serialize($updated_data));
 		$this->db->where( array('user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash_code));
 		$this->db->update('xtra_candidate_attended_data', $schedule_data2);
 
+
+
 		/*SELECT SUM( TIMESTAMPDIFF(SECOND, a.taken_from, a.taken_to) ) as ss FROM xtra_candidate_attended_data as a*/
-		die();
+		/*SELECT SUM( TIMESTAMPDIFF(SECOND, cad.taken_from, cad.taken_to) ) as seconds_took FROM xtra_candidate_attended_schedule as cas JOIN xtra_candidate_attended_data as cad ON cas.id = cad.attend_schedule_id WHERE cas.active = 1 AND cad.active = 1 AND cad.schedule_id = 6 AND cas.schedule_id = 6 */
+
+        die();
 	}
 
 

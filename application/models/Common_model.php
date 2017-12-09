@@ -47,6 +47,8 @@ class Common_model extends MY_Model {
 		return $query->row();
 	}
 
+
+
 	public function getExamQuestions($exam_id = 0) {
 		$query = $this->db->query("SELECT e.id, e.exam_name, e.exam_duration, e.total_questions, e.total_marks, e.description, eq.questions FROM xtra_exam_questions as eq JOIN xtra_exam as e ON eq.exam_id = e.id WHERE e.active = 1 AND eq.active = 1 AND e.id = ${exam_id}");
 		return $query->row();
@@ -72,12 +74,42 @@ class Common_model extends MY_Model {
 
 
 
+	public function scheduleTimeRemainToCandidate($schedule_id = 0, $user_id = 0) {
+
+		$query = $this->db->query("SELECT (time_table.exam_time - took_table.seconds_took) time_remain FROM 
+( SELECT ( CASE WHEN e.exam_duration is NULL THEN 0 ELSE e.exam_duration END ) as exam_time FROM xtra_exam_schedule as es JOIN xtra_exam as e ON es.exam_id = e.id WHERE e.active = 1 AND es.active = 1 AND es.id = ${schedule_id} ) as time_table
+
+JOIN ( SELECT (CASE WHEN SUM( TIMESTAMPDIFF(SECOND, cad.taken_from, cad.taken_to) ) IS NULL
+THEN 0
+ELSE SUM( TIMESTAMPDIFF(SECOND, cad.taken_from, cad.taken_to) )
+END) as seconds_took FROM xtra_candidate_attended_schedule as cas JOIN xtra_candidate_attended_data as cad ON cas.id = cad.attend_schedule_id WHERE cas.active = 1 AND cad.active = 1 AND cad.schedule_id = ${schedule_id} AND cas.schedule_id = ${schedule_id} AND cas.user_id = ${user_id} ) as took_table
+
+ON 1=1");
+		return $query->row();
+	}
+
+	public function scheduleCandidateSubmitStatus($schedule_id = 0, $user_id = 0) {
+		$query = $this->db->query("SELECT cas.id FROM xtra_candidate_attended_schedule as cas WHERE cas.user_id = ${user_id} AND cas.schedule_id = ${schedule_id} AND cas.active = 1 AND cas.schedule_status = 'submit'");
+		return $query->row();
+	}
+
+
+	public function getAttendedScheduleDetail($schedule_id = 0, $user_id = 0) {
+		$query = $this->db->query("SELECT cas.answer_data FROM xtra_candidate_attended_schedule as cas WHERE cas.user_id = ${user_id} AND cas.schedule_id = ${schedule_id} AND cas.active = 1 ORDER BY cas.last_update DESC LIMIT 1");
+		return $query->row();
+	}
+
+
+
+
+
+
 
 
 
 
 	public function checkExamHash($hash = '') {
-		$query = $this->db->query("SELECT so.schedule_hash FROM xtra_candidate_attended_schedule as so WHERE so.schedule_hash = '${hash}'");
+		$query = $this->db->query("SELECT so.schedule_hash FROM xtra_candidate_attended_data as so WHERE so.schedule_hash = '${hash}'");
 		return $query->row();
 	}
 
