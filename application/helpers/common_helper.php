@@ -151,6 +151,21 @@ if( ! function_exists('getCandidateQuestionData') )
 	}
 }
 
+if( ! function_exists('getCandidatePreviousScheduledData') )
+{
+	function getCandidatePreviousScheduledData($schedule_id, $candidate_id, $scheduled_hash='')
+	{
+		$CI =& get_instance();
+		if( $data = $CI->common->getAttendedScheduleDetail($schedule_id, $candidate_id, $scheduled_hash) ) {
+			return $data;
+		}
+		return false;
+	}
+}
+
+
+
+
 
 
 

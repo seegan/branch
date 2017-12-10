@@ -46,7 +46,7 @@ class Exam extends MY_Controller {
 			$data['hash_code'] = setCandidateAttendSchedule($schedule_id, $this->auth_user_id, date('Y-m-d H:i:s'));
 			$data['time_remain'] = $time_to_finish->time_remain;
 			$data['questions'] = getExamQuestions($exam_id);
-			$data['attended_data'] = getCandidateQuestionData($schedule_id, $this->auth_user_id);
+			$data['attended_data'] = getCandidateQuestionData($schedule_id, $this->auth_user_id, $data['hash_code']);
 
 
 			list($hour, $min, $sec) = explode(":", gmdate("H:i:s", $data['time_remain'])); 

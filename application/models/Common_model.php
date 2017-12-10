@@ -94,12 +94,15 @@ ON 1=1");
 	}
 
 
-	public function getAttendedScheduleDetail($schedule_id = 0, $user_id = 0) {
-		$query = $this->db->query("SELECT cas.answer_data FROM xtra_candidate_attended_schedule as cas WHERE cas.user_id = ${user_id} AND cas.schedule_id = ${schedule_id} AND cas.active = 1 ORDER BY cas.last_update DESC LIMIT 1");
+	public function getAttendedScheduleDetail($schedule_id = 0, $user_id = 0, $scheduled_hash = false) {
+		if(!$scheduled_hash) {
+			$query = $this->db->query("SELECT * FROM xtra_candidate_attended_schedule as cas WHERE cas.user_id = ${user_id} AND cas.schedule_id = ${schedule_id} AND cas.active = 1 ORDER BY cas.last_update DESC LIMIT 1");
+		} else {
+			$query = $this->db->query("SELECT * FROM xtra_candidate_attended_schedule as cas WHERE cas.user_id = ${user_id} AND cas.schedule_id = ${schedule_id} AND cas.schedule_hash = '${scheduled_hash}' AND cas.active = 1 ORDER BY cas.last_update DESC LIMIT 1");
+		}
+
 		return $query->row();
 	}
-
-
 
 
 

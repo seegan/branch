@@ -58,8 +58,23 @@ function launchApplication(l_url, l_windowName)
 
 
 
-    var collectAndSubmit = function (time) {
-      console.log('time_submit');
+    var activeTimeUpdate = function (time) {
+      jQuery.ajax({
+          url: filter_ajaxurl,
+          type: 'POST',
+          dataType: "json",
+          data: {
+            'action': 'activeTimeSubmit',
+            'hash_code' : $('#hash_code').val(),
+            'schedule_id' : $('#schedule_id').val(),
+          },
+          success: function( data ) {
+            console.log(data);
+          },
+          done: function() {
+            console.log(data);
+          }
+      });
     }
 
     var collectExamData = function (time) {
@@ -70,15 +85,12 @@ function launchApplication(l_url, l_windowName)
       var board_prev_data = localStorage.getItem('board_data');
       
       if( nav_prev_data == $('#question-navigator :input').serialize() && board_prev_data == $('.answer-board.inner-board :input').serialize()) {
-        collectAndSubmit();
+        console.log('Same Data');
       } else {
         jQuery.ajax({
             url: filter_ajaxurl,
             type: 'POST',
             dataType: "json",
-            showAutocompleteOnFocus : true,
-            autoFocus: true,
-            selectFirst: true,
             data: {
                 'action': 'examDataSubmit',
                 'navigator_data' : $('#question-navigator :input').serialize(),
@@ -233,8 +245,8 @@ function launchApplication(l_url, l_windowName)
       'listener':function(param){
           delta = 10000,
           window.tid = setInterval(function() {
-              //output.collectAndSubmit(time);       
-              collectAndSubmit('test');       
+              //output.activeTimeUpdate(time);       
+              activeTimeUpdate('test');       
           }, delta);
 
       },
@@ -362,6 +374,9 @@ function launchApplication(l_url, l_windowName)
             output.setCandidateData();
             //var privatefun = function(){ console.log('inside private');  }
             
+            activeTimeUpdate('test');
+            output.listener();
+
             _this.$this.find('#navigator-in li').on('click',function(){
 
 
