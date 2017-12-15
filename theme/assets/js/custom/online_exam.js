@@ -69,24 +69,35 @@ function launchApplication(l_url, l_windowName)
             'schedule_id' : $('#schedule_id').val(),
           },
           success: function( data ) {
-            console.log(data);
+              if(data.redirect) {
+                location.href = data.redirect;
+              }
+              if(data.window_close) {
+                //window.close();
+                open(location, '_self').close();
+              }
+
+              jQuery('.status_msg').append("<div class='status_message success'>"+data.page_action+"</div>");
+              setTimeout(function() {
+                jQuery('.status_message').remove();
+              }, 2000);
+
           },
           done: function() {
-            console.log(data);
           }
       });
     }
 
-    var collectExamData = function (time) {
-
-      //localStorage.removeItem('favoriteflavor');
-
+    var collectExamData = function (action ='stay') {
       var nav_prev_data = localStorage.getItem('navigator_data');
       var board_prev_data = localStorage.getItem('board_data');
-      
-      if( nav_prev_data == $('#question-navigator :input').serialize() && board_prev_data == $('.answer-board.inner-board :input').serialize()) {
+      var schedule_action = localStorage.getItem('schedule_action');
+
+      jQuery('.saving_image').css('display','block');
+
+/*      if( nav_prev_data == $('#question-navigator :input').serialize() && board_prev_data == $('.answer-board.inner-board :input').serialize() && schedule_action == action) {
         console.log('Same Data');
-      } else {
+      } else {*/
         jQuery.ajax({
             url: filter_ajaxurl,
             type: 'POST',
@@ -98,15 +109,32 @@ function launchApplication(l_url, l_windowName)
                 'hash_code' : $('#hash_code').val(),
                 'schedule_status' : 'open',
                 'schedule_id' : $('#schedule_id').val(),
+                'schedule_action' : action,
             },
             success: function( data ) {
-              
+              if(data.redirect) {
+                location.href = data.redirect;
+              }
+              if(data.window_close) {
+                //window.close();
+                open(location, '_self').close();
+              }
+
+
+              jQuery('.saving_image').css('display','none');
+              jQuery('.status_msg').append("<div class='status_message success'>"+data.page_action+"</div>");
+              setTimeout(function() {
+                jQuery('.status_message').remove();
+              }, 2000);
+            },
+            done: function(){
+              jQuery('.saving_image').css('display','none');
             }
         });
-      }
 
       localStorage.setItem('navigator_data',$('#question-navigator :input').serialize());
       localStorage.setItem('board_data',$('.answer-board.inner-board :input').serialize());
+      localStorage.setItem('schedule_action', action);
 
 
     }
@@ -335,7 +363,6 @@ function launchApplication(l_url, l_windowName)
       },
 
       'onReviewQuestion': function() { 
-
         jQuery('.review_stay').on('click', function(){
           var question_id = jQuery('#active_question').val();
           var is_checked = jQuery('[data-optionquestion='+question_id+']').find('.single-option').is(':checked');
@@ -345,7 +372,6 @@ function launchApplication(l_url, l_windowName)
             changeToReview(question_id, 'stay');
           }
         });
-
         jQuery('.review_next').on('click', function(){
           var question_id = jQuery('#active_question').val();
           var is_checked = jQuery('[data-optionquestion='+question_id+']').find('.single-option').is(':checked');
@@ -358,10 +384,29 @@ function launchApplication(l_url, l_windowName)
         });
       },
 
+      'onSaveAndContinue' : function() {
+        jQuery('.save_continue').on('click', function(){
+          collectExamData('stay');
+        });
+      },
+      'onSaveAndContinueLater' : function() {
+        jQuery('.save_continue_later').on('click', function(){
+          collectExamData('continue_later');
+        });
+      },
+      'onSaveAndSubmit' : function() {
+        jQuery('.submit_finish').on('click', function(){
+          collectExamData('submit');
+        });
+      },
 
 
 
       'init':function(){
+
+          localStorage.removeItem('navigator_data');
+          localStorage.removeItem('board_data');
+
           $jquery.each(function(){
             var _this = this;
             _this.$this = $(this);
@@ -372,6 +417,13 @@ function launchApplication(l_url, l_windowName)
             output.onClearResponse();
             output.onReviewQuestion();
             output.setCandidateData();
+            
+            output.onSaveAndContinue();
+            output.onSaveAndContinueLater();
+            output.onSaveAndSubmit();
+
+
+
             //var privatefun = function(){ console.log('inside private');  }
             
             activeTimeUpdate('test');

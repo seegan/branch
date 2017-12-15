@@ -26,6 +26,11 @@ class ExamAjax extends MY_Controller {
 
 
     private function activeTimeSubmit() {
+
+        $data['page_action']    = '';
+        $data['redirect']       = false;
+        $data['window_close']   = false;
+
         $user_id = $this->auth_user_id;
         $hash_code = $this->input->post('hash_code');
         $schedule_status = $this->input->post('schedule_status');
@@ -36,12 +41,10 @@ class ExamAjax extends MY_Controller {
         $previous_data = getCandidatePreviousScheduledData($schedule_id, $user_id, $hash_code);
         $last_update_time = ( $previous_data && isset($previous_data->last_update)) ? $previous_data->last_update : date('Y-m-d H:i:s');
         $seconds_diff_from_last_update = strtotime($update_time) - strtotime($last_update_time);
-        $previous_time_remain = $time_to_finish->time_remain;
+        $previous_time_remain = ($time_to_finish) ? $time_to_finish->time_remain : 0;
         $remain_time = $previous_time_remain - $seconds_diff_from_last_update;
 
         if( $previous_data ) {
-
-            if($remain_time > 0) {
 
                 $schedule_data1 = array('last_update' => $update_time);
                 $this->db->where( array('user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash_code));
@@ -51,14 +54,27 @@ class ExamAjax extends MY_Controller {
                 $this->db->where( array('user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash_code));
                 $this->db->update('xtra_candidate_attended_data', $schedule_data2);
 
+            if($remain_time < 0) {
+
+                $submit_update = array('schedule_status' => 'submit', );
+                $this->db->where( array('user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash_code));
+                $this->db->update('xtra_candidate_attended_schedule', $submit_update);
+
+                $data['page_action']    = 'Time Out!';
+                $data['redirect']       = base_url('online/exam/result').'/'.$schedule_id;
             }
+        } else {
+            $data['page_action'] = 'No Previous Data Found!';
+            $data['redirect']       = base_url('online/exam/info').'/'.$schedule_id;            
         }
 
-        die();
+        return json_encode($data);
     }
 
 
 	private function examDataSubmit() {
+
+        $schedule_action =  ( $this->input->post('schedule_action') && $this->input->post('schedule_action')!= '' ) ? $this->input->post('schedule_action') : 'stay';
 
         $user_id = $this->auth_user_id;
         $hash_code = $this->input->post('hash_code');
@@ -72,10 +88,15 @@ class ExamAjax extends MY_Controller {
 
         $last_update_time = ( $previous_data && isset($previous_data->last_update)) ? $previous_data->last_update : date('Y-m-d H:i:s');
         $seconds_diff_from_last_update = strtotime($update_time) - strtotime($last_update_time);
-        $previous_time_remain = $time_to_finish->time_remain;
+
+        $previous_time_remain = ($time_to_finish) ? $time_to_finish->time_remain : 0;
         $remain_time = $previous_time_remain - $seconds_diff_from_last_update;
 
-        if( $exam_schedule_data && $remain_time > 0 && $previous_data) {
+        $data['page_action']    = 'stay';
+        $data['redirect']       = false;
+        $data['window_close']   = false;
+
+        if( $exam_schedule_data && $previous_data && $remain_time > 0) {
 
     		$navigator_data = array();
             parse_str($this->input->post('navigator_data'), $navigator_data);
@@ -89,15 +110,35 @@ class ExamAjax extends MY_Controller {
 
             $updated_data = [];
             if(isset($navigator_data['question_status']) && is_array($navigator_data['question_status']) && count($navigator_data['question_status'])) {
+
+
+                $question_ids = implode(",", array_keys($navigator_data['question_status']));
+                $answers = combainQuestionAnswers($question_ids);
+
+                $positive_mark = 0;
+                $negative_mark = 0;
+
             	foreach ($navigator_data['question_status'] as $question_id => $n_value) {
             		$ans = ( $ans_data && isset($ans_data[$question_id]) ) ? $ans_data[$question_id] : 0;
             		$n_value['candidate_answer'] = $ans;
                     $n_value['question_id'] = $question_id;
+
+
+                    if( $n_value['attend_status'] == 'answered' ) {
+                        if($ans == $answers[$question_id]['answer_option']) {
+                            $positive_mark += $answers[$question_id]['right_mark'];
+                        } else {
+                            $negative_mark += $answers[$question_id]['negative_mark'];
+                        }
+                    }
+
             		$updated_data[] = $n_value;
             	}
             }
+            $total_mark = ($positive_mark - $negative_mark);
 
-            $schedule_data1 = array('schedule_status' => $schedule_status, 'answer_data' => serialize($updated_data), 'last_update' => $update_time);
+
+            $schedule_data1 = array('positive_marks' => $positive_mark, 'negative_marks'=> $negative_mark, 'total_marks'=> $total_mark, 'schedule_status' => $schedule_status, 'answer_data' => serialize($updated_data), 'last_update' => $update_time);
     		$this->db->where( array('user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash_code));
     		$this->db->update('xtra_candidate_attended_schedule', $schedule_data1);
 
@@ -105,8 +146,47 @@ class ExamAjax extends MY_Controller {
     		$this->db->where( array('user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash_code));
     		$this->db->update('xtra_candidate_attended_data', $schedule_data2);
 
-            die();
+
+            if( $schedule_action == 'submit' ) {
+                
+                $submit_update = array('schedule_status' => 'submit', );
+                $this->db->where( array('user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash_code));
+                $this->db->update('xtra_candidate_attended_schedule', $submit_update);
+
+                $data['page_action'] = 'Exam Data Saved And Exam Submitted!!';
+                $data['redirect']       = base_url('online/exam/result').'/'.$schedule_id;
+
+            } else if( $schedule_action == 'continue_later' ) {
+                $data['page_action'] = 'Exam Data Saved!';
+                $data['window_close']   = true;
+            } else {
+                $data['page_action'] = 'Exam Data Saved!';
+            }
+
+        } else {
+
+            if(!$exam_schedule_data) {
+
+                $data['page_action'] = 'You Are Not Allowed To Take This Exam!';
+                $data['redirect']       = base_url('online/exam/info').'/'.$schedule_id;
+
+            } else if (!$previous_data) {
+
+                $data['page_action'] = 'No Previous Data Found!';
+                $data['redirect']       = base_url('online/exam/info').'/'.$schedule_id;
+
+            } else {
+
+                $submit_update = array('schedule_status' => 'submit', );
+                $this->db->where( array('user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash_code));
+                $this->db->update('xtra_candidate_attended_schedule', $submit_update);
+
+                $data['page_action']    = 'Time Out!';
+                $data['redirect']       = base_url('online/exam/result').'/'.$schedule_id;
+            }
         }
+
+        return json_encode($data);
 	}
 
 

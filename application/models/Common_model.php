@@ -29,6 +29,10 @@ class Common_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function getScheduleData($schedule_id) {
+		$query = $this->db->query("SELECT es.* FROM xtra_exam_schedule as es WHERE es.id = ${schedule_id} AND es.active = 1");
+		return $query->row();
+	}
 
 	public function scheduleAvailToTake($schedule_id, $data_time = '0000-00-00') {
 		$query = $this->db->query("select es.id as schedule_id, es.exam_id, es.schedule_name, es.description, es.start_date, es.end_date, es.result_date, es.offered_as, es.offer_cost, es.result_as, es.schedule_to, TIMESTAMPDIFF(SECOND, '${data_time}', es.end_date) as time_to_end from xtra_exam_schedule as es WHERE es.active = 1 AND es.id =${schedule_id} AND '${data_time}' between es.start_date AND es.end_date");
@@ -43,7 +47,7 @@ class Common_model extends MY_Model {
 
 
 	public function getScheduleCandidateDetail($schedule_id = 0) {
-		$query = $this->db->query("SELECT candidates FROM xtra_exam_schedule_candidates as sc WHERE sc.schedule_id = ${schedule_id}");
+		$query = $this->db->query("SELECT candidates FROM xtra_exam_schedule_candidates as sc WHERE sc.schedule_id = ${schedule_id} AND sc.active = 1");
 		return $query->row();
 	}
 
@@ -57,8 +61,13 @@ class Common_model extends MY_Model {
 
 
 
-	public function getQuestions($questions) {
-		$query = $this->db->query("SELECT q.id as question_id, q.question, q.question_time FROM xtra_question as q WHERE q.id IN ($questions) AND q.active = 1");
+	public function getQuestions($questions, $get = 'none') {
+		if($get == 'none' ){
+			$query = $this->db->query("SELECT q.id as question_id, q.question, q.question_time FROM xtra_question as q WHERE q.id IN ($questions) AND q.active = 1");
+		} else {
+			$query = $this->db->query("SELECT q.id as question_id, q.question, q.question_time, q.right_mark, q.negative_mark FROM xtra_question as q WHERE q.id IN ($questions) AND q.active = 1");
+		}
+
 		return $query->result_array();
 	}
 
@@ -68,10 +77,10 @@ class Common_model extends MY_Model {
 		return $query->result_array();
 	}
 
-
-
-
-
+	public function getAnswers($questions) {
+		$query = $this->db->query("SELECT sa.question_id, sa.option_id FROM xtra_single_answer as sa WHERE sa.question_id IN ($questions)");
+		return $query->result_array();
+	}
 
 
 	public function scheduleTimeRemainToCandidate($schedule_id = 0, $user_id = 0) {
@@ -87,6 +96,13 @@ END) as seconds_took FROM xtra_candidate_attended_schedule as cas JOIN xtra_cand
 ON 1=1");
 		return $query->row();
 	}
+
+
+	public function scheduleTimeRemainToExam($schedule_id = 0, $current_time) {
+		$query = $this->db->query("SELECT TIMESTAMPDIFF(SECOND, '${current_time}', es.end_date) as time_remain FROM xtra_exam_schedule as es JOIN xtra_exam as e ON es.exam_id = e.id WHERE e.active = 1 AND es.active = 1 AND es.id = ${schedule_id}");
+		return $query->row();
+	}
+
 
 	public function scheduleCandidateSubmitStatus($schedule_id = 0, $user_id = 0) {
 		$query = $this->db->query("SELECT cas.id FROM xtra_candidate_attended_schedule as cas WHERE cas.user_id = ${user_id} AND cas.schedule_id = ${schedule_id} AND cas.active = 1 AND cas.schedule_status = 'submit'");
@@ -109,11 +125,23 @@ ON 1=1");
 
 
 
-
-
 	public function checkExamHash($hash = '') {
 		$query = $this->db->query("SELECT so.schedule_hash FROM xtra_candidate_attended_data as so WHERE so.schedule_hash = '${hash}'");
 		return $query->row();
 	}
+
+
+
+	public function canSchedulePublishResult($schedule_id = 0, $result_date = '') {
+		$query = $this->db->query("SELECT (CASE WHEN es.result_on = 'date' THEN ( CASE WHEN es.result_date < '${result_date}' THEN 1 ELSE 0 END ) ELSE 1 END) as result_avail FROM xtra_exam_schedule as es WHERE es.active = 1 AND es.id = ${schedule_id}");
+		return $query->row();
+	}
+
+
+
+
+
+
+
 
 }

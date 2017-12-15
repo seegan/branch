@@ -5,7 +5,7 @@ $config['user_role_permissions'] = array(
     'dashboard'         => array('index'),
     'exam'              => array('index', 'upcomming', 'expired', 'history'),
     'myauth'            => array('login', 'logout', 'recover', 'recovery_verification'),
-    'exam'              => array('index', 'instruction', 'schedule'),
+    'exam'              => array('index', 'instruction', 'schedule', 'result', 'info'),
     'ExamAjax' 			=> array('index','examDataSubmit'),
   ),
 );

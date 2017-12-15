@@ -20,6 +20,18 @@ if( ! function_exists('hasBranchAccess') )
 }
 
 
+if( ! function_exists('getScheduleDetail') )
+{
+	function getScheduleDetail($schedule_id = 0) {
+		$CI =& get_instance();
+		if($schedule_data = $CI->common->getScheduleData($schedule_id)) {
+			return $schedule_data;
+		}
+		return false;
+	}	
+}
+
+
 // End of Can Take Exam Check
 
 if( ! function_exists('canTakeExam') )
@@ -41,6 +53,8 @@ if( ! function_exists('scheduleAvailToCandidate') )
 {
 	function scheduleAvailToCandidate($schedule_id = 0, $user_id = 0, $schedule_to = 2)
 	{
+
+
 		$CI =& get_instance();
 		if( $CI->common->scheduleAvailToCandidate($schedule_id, $user_id) ) {
 			if($schedule_to != 1) {
@@ -76,9 +90,21 @@ if( ! function_exists('timeAvailToTakeExam') )
 	function timeAvailToTakeExam($schedule_id = 0, $user_id = 0)
 	{
 		$CI =& get_instance();
-		$time_remain = $CI->common->scheduleTimeRemainToCandidate($schedule_id, $user_id);
-		if( $time_remain && !$CI->common->scheduleCandidateSubmitStatus($schedule_id, $user_id)) {
-			return $time_remain;
+		$current_time = date('Y-m-d H:i:s');
+
+		$candidate_time_remain = $CI->common->scheduleTimeRemainToCandidate($schedule_id, $user_id);
+		$exam_time_remain = $CI->common->scheduleTimeRemainToExam($schedule_id, $current_time);
+
+		if( $candidate_time_remain && $exam_time_remain && !$CI->common->scheduleCandidateSubmitStatus($schedule_id, $user_id)) {
+			if($exam_time_remain->time_remain >= $candidate_time_remain->time_remain) {
+				return $candidate_time_remain;
+			} else {
+				if($exam_time_remain->time_remain < 0) {
+					return false;
+				} else {
+					return $exam_time_remain;
+				}
+			}
 		}
 		return false;
 	}
@@ -137,6 +163,33 @@ if( ! function_exists('combainQuestionOptions') )
 
 
 
+if( ! function_exists('combainQuestionAnswers') )
+{
+	function combainQuestionAnswers($question_ids)
+	{
+		$CI =& get_instance();
+		$questions = $CI->common->getQuestions($question_ids, 'mark');
+		$answers = $CI->common->getAnswers($question_ids);
+		
+		$answer_gruped = array();
+		foreach ($answers as $item) {
+		  // copy item to grouped
+		  $answer_gruped[$item['question_id']] = $item;
+		}
+
+		$question_gruped = array();
+		foreach ($questions as $item) {
+		  //copy item to grouped
+			$item['answer_option'] = $answer_gruped[$item['question_id']]['option_id'];
+		  	$question_gruped[$item['question_id']] = $item;
+
+		}
+
+		return $question_gruped;
+	}
+}
+
+
 
 
 if( ! function_exists('getCandidateQuestionData') )
@@ -163,6 +216,17 @@ if( ! function_exists('getCandidatePreviousScheduledData') )
 	}
 }
 
+if( ! function_exists('getScheduleCandidateData') )
+{
+	function getScheduleCandidateData($schedule_id, $candidate_id)
+	{
+		$CI =& get_instance();
+		if( $data = $CI->common->getAttendedScheduleDetail($schedule_id, $candidate_id) ) {
+			return $data;
+		}
+		return false;
+	}
+}
 
 
 
@@ -198,6 +262,41 @@ if( ! function_exists('getBatchUpcommingExams') )
 }
 
 
+
+if( ! function_exists('canSchedulePublishResult') )
+{
+	function canSchedulePublishResult($schedule_id = 0, $result_date = '')
+	{
+		$CI =& get_instance();
+		if( $canResult = $CI->common->canSchedulePublishResult($schedule_id, $result_date) ) {
+			if($canResult && $canResult->result_avail == 1) {
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 if( ! function_exists('secondsToHuman') )
 {
 	function secondsToHuman($seconds) {
@@ -205,6 +304,8 @@ if( ! function_exists('secondsToHuman') )
 	  	return sprintf('%02d:%02d:%02d', ($t/3600),($t/60%60), $t%60);
 	}
 }
+
+
 
 
 
@@ -356,3 +457,6 @@ if( ! function_exists('get_unused_exam_hash') )
 		return $hash_data;
 	}
 }
+
+
+

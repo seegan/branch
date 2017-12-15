@@ -11,7 +11,7 @@
 								</div>
 								<div class="col-lg-4">
 									<div class="text-center countdown_timer">
-										<span id="hms_timer"></span>
+										<i class="mdi mdi-compass-outline"></i><span id="hms_timer"></span>
 									</div>
 								</div>
 							</div>
@@ -43,12 +43,12 @@
 					</div>
 					<div class="col-lg-7">
 						<button class="btn btn-primary waves-effect waves-light clear_response" type="button">Clear Response</button>
-						<button class="btn btn-primary waves-effect waves-light review_next" type="button">Mark for Review & Next</button>
-						<button class="btn btn-primary waves-effect waves-light" type="button" >Save & Continue Later</button>
+						<button class="btn btn-primary waves-effect waves-light review_next" type="button"><i class="mdi mdi-folder-move"></i> Mark for Review & Next</button>
+						<button class="btn btn-primary waves-effect waves-light save_continue_later" type="button" ><i class="mdi mdi-content-save-all"></i> Save & Continue Later</button>
 					</div>
 					<div class="col-lg-2">
 						<div class="text-right">
-							<button class="btn btn-primary waves-effect waves-light" type="button" >Submit</button>
+							<button class="btn btn-primary waves-effect waves-light submit_finish" type="button" >Submit</button>
 						</div>
 					</div>
 				</div>

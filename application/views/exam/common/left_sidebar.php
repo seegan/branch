@@ -35,9 +35,34 @@ asort($question_ids);
                 <button class="btn btn-primary waves-effect waves-light review_stay" type="button" >Review Question </button>
             </div>
         </div>
+
+
         <div class="col-lg-12">
-            <div class="left-full">
-                <button class="btn btn-info waves-effect waves-light" type="button" >Instruction </button>
+            <div style="margin-top:10px;">
+
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="left-full">
+                            <button class="btn btn-icon waves-effect waves-light btn-info m-b-5"><i class="mdi mdi-flag-outline"></i> Instruction</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-6"> 
+                        <div class="left-full">
+                            <button class="btn btn-icon waves-effect btn-success m-b-5 save_continue"> <i class="mdi mdi-floppy"></i> Save </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="col-lg-12">
+            <div class="saving_image" style="margin-top: 40px;">
+                <img src="<?php echo base_url(); ?>theme/assets/images/saving.gif">
+            </div>
+            <div class="status_msg">
+                
             </div>
         </div>
     </div>

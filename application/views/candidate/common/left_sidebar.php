@@ -15,10 +15,10 @@
                             <li class="has_sub">
                                 <a href="javascript:void(0);" class="waves-effect waves-primary"><i class="mdi mdi-book-multiple-variant"></i><span> Exam </span> <span class="menu-arrow"></span></a>
                                 <ul class="list-unstyled">
-                                    <li><a href="<?php echo base_url('candidate/exam/current') ?>"><i class="mdi mdi-book-multiple-variant"></i>Current</a></li>
-                                    <li><a href="<?php echo base_url('candidate/exam/upcomming') ?>">Upcomming</a></li>
-                                    <li><a href="<?php echo base_url('candidate/exam/expired') ?>">Expired</a></li>
-                                    <li><a href="<?php echo base_url('candidate/exam/history') ?>">History </a></li>
+                                    <li><a href="<?php echo base_url('candidate/exam/current') ?>"><i class="ti-eye"></i>Current</a></li>
+                                    <!-- <li><a href="<?php echo base_url('candidate/exam/upcomming') ?>">Upcomming</a></li>
+                                    <li><a href="<?php echo base_url('candidate/exam/expired') ?>">Expired</a></li> -->
+                                    <li><a href="<?php echo base_url('candidate/exam/history') ?>"><i class="fa fa-history"></i>History </a></li>
                                 </ul>
                             </li>
 
