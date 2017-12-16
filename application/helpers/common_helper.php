@@ -176,15 +176,12 @@ if( ! function_exists('combainQuestionAnswers') )
 		  // copy item to grouped
 		  $answer_gruped[$item['question_id']] = $item;
 		}
-
 		$question_gruped = array();
 		foreach ($questions as $item) {
 		  //copy item to grouped
 			$item['answer_option'] = $answer_gruped[$item['question_id']]['option_id'];
 		  	$question_gruped[$item['question_id']] = $item;
-
 		}
-
 		return $question_gruped;
 	}
 }
@@ -384,7 +381,6 @@ if( ! function_exists('in_array_r') )
 	            return true;
 	        }
 	    }
-
 	    return false;
 	}
 }

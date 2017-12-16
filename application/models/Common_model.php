@@ -30,7 +30,7 @@ class Common_model extends MY_Model {
 	}
 
 	public function getScheduleData($schedule_id) {
-		$query = $this->db->query("SELECT es.* FROM xtra_exam_schedule as es WHERE es.id = ${schedule_id} AND es.active = 1");
+		$query = $this->db->query("SELECT es.*, e.exam_duration, e.total_questions, e.total_marks FROM xtra_exam_schedule as es JOIN xtra_exam as e ON es.exam_id = e.id WHERE es.id = ${schedule_id} AND es.active = 1");
 		return $query->row();
 	}
 

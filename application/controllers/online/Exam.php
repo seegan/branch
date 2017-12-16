@@ -116,13 +116,9 @@ class Exam extends MY_Controller {
 
 		$page_content = $this->load->view('exam/result/result', $data, TRUE);
 
-		$left_sidebar = $this->load->view('candidate/common/left_sidebar', '', TRUE);
-		$right_sidebar = $this->load->view('candidate/common/right_sidebar', '', TRUE);
-
 		echo $this->load->view('candidate/common/header', $data, TRUE);
-		echo $left_sidebar;
+
 		echo $page_content;
-		echo $right_sidebar;
 		echo $this->load->view('candidate/common/footer', '', TRUE);
 
 	}

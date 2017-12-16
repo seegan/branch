@@ -1,100 +1,70 @@
+<div class="content-page-instruction">
+	<div class="content">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="text-center">
 
 
-            <!-- ============================================================== -->
-            <!-- Start right Content here -->
-            <!-- ============================================================== -->                      
-            <div class="content-page">
-                <!-- Start content -->
-                <div class="content">
-                    <div class="container-fluid">
-                        <div class="row">
+				    <div class="col-lg-12">
+				        <table class="table table-bordered">
+				            <thead>
+				                <tr>
+				                    <th>Name</th>
+				                    <th>Exam Duration</th>
+				                    <th>Start Date</th>
+				                    <th>End Date</th>
+				                    <th>Result Date</th>
+				                    <th>Offered As</th>
+				                    <th>Cost</th>
+				                </tr>
+				            </thead>
+				            <tbody>
+				            <?php
+				            if($schedule_data) {
+				            ?>
+				                <tr>
+				                    <td><?php echo $schedule_data->schedule_name; ?></td>
+				                    <th><?php echo secondsToHuman($schedule_data->exam_duration); ?></th>
+				                    <td><?php echo $schedule_data->start_date; ?></td>
+				                    <td><?php echo $schedule_data->end_date; ?></td>
+				                    <td><?php echo $schedule_data->result_date; ?></td>
+				                    <td><?php echo ucfirst( $schedule_data->offered_as ); ?></td>
+				                    <td><?php echo $schedule_data->offer_cost; ?></td>
+				                </tr>
+				            <?php
+				            }
+				            ?>
+				            </tbody>
+				        </table>
+				    </div>
 
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="filter-section">
-                                            <div class="page-title-box action-header">
-                                                <div>
-                                                    <div class="row">
-                                                        <div class="col-md-12 col-lg-10">
+				    <div class="col-lg-12">
 
-                                                       </div>
-                                                        <div class="col-md-12 col-lg-2">
-                                                            
-                                                        </div>
-                                                    </div>
-                                                </div>
+					    <div class="result-data" style="width:600px;margin:0 auto;">
+					    	<div style="text-align:center;">
+					    		<h3 style="margin-top:20px;margin-bottom:20px;">
+					    			<?php echo $main_content; ?>
+					    		</h3>
+					    	</div>
+					        <table class="table table-bordered">
+					            <thead>
+					                <tr>
+					                    <th>Name</th>
+					                    <th>Data</th>
+					                </tr>
+					            </thead>
+					            <tbody>
+					                <tr>
+					                    <td>dfdf</td>
+					                    <th>fdhg</th>
+					                </tr>
+					            </tbody>
+					        </table>
+					    </div>
+				    </div>
 
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="">
-
-
-
-									<div class="row">
-									    <div class="col-lg-12">
-
-<?php
-echo "<pre>";
-var_dump($info_data);
-var_dump($schedule_data);
-
-var_dump($info_box);
-?>
-
-
-									        <table class="table table-bordered">
-									            <thead>
-									                <tr>
-									                    <th>#</th>
-									                    <th>Name</th>
-									                    <th>Exam Duration</th>
-									                    <th>Start Date</th>
-									                    <th>End Date</th>
-									                    <th>Result Date</th>
-									                    <th>Offered As</th>
-									                    <th>Cost</th>
-									                    <th style="width:200px;">Action</th>
-									                </tr>
-									            </thead>
-									            <tbody>
-									                <tr>
-									                    <th></th>
-									                    <td></td>
-									                    <th></th>
-									                    <td></td>
-									                    <td></td>
-									                    <td></td>
-									                    <td></td>
-									                    <td></td>
-									                    <td>
-									                        <button type="button" class="btn btn-success btn-custom waves-effect w-md waves-light m-b-5 take_exam_btn">Take Exam</button>
-									                    </td>
-									                </tr>
-									            </tbody>
-									        </table>
-									    </div>
-									</div>
-
-
-
-                                </div>
-                            </div>
-
-                        </div>
-                        <!-- end row -->
-
-                    </div>
-                    <!-- end container -->
-                </div>
-                <!-- end content -->
-
-            </div>
-            <!-- ============================================================== -->
-            <!-- End Right content here -->
-            <!-- ============================================================== -->
+				</div>
+			</div>
+		</div>
+	</div>	
+</div>
