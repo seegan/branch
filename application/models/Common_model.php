@@ -67,7 +67,6 @@ class Common_model extends MY_Model {
 		} else {
 			$query = $this->db->query("SELECT q.id as question_id, q.question, q.question_time, q.right_mark, q.negative_mark FROM xtra_question as q WHERE q.id IN ($questions) AND q.active = 1");
 		}
-
 		return $query->result_array();
 	}
 
