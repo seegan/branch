@@ -138,11 +138,11 @@ class ExamAjax extends MY_Controller {
             $total_mark = ($positive_mark - $negative_mark);
 
 
-            $schedule_data1 = array('positive_marks' => $positive_mark, 'negative_marks'=> $negative_mark, 'total_marks'=> $total_mark, 'schedule_status' => $schedule_status, 'answer_data' => serialize($updated_data), 'last_update' => $update_time);
+            $schedule_data1 = array('positive_marks' => $positive_mark, 'negative_marks'=> $negative_mark, 'total_marks'=> $total_mark, 'schedule_status' => $schedule_status, 'answer_data' => json_encode($updated_data), 'last_update' => $update_time);
     		$this->db->where( array('user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash_code));
     		$this->db->update('xtra_candidate_attended_schedule', $schedule_data1);
 
-            $schedule_data2 = array('taken_to' => $update_time, 'schedule_status' => $schedule_status, 'answer_data' => serialize($updated_data));
+            $schedule_data2 = array('taken_to' => $update_time, 'schedule_status' => $schedule_status, 'answer_data' => json_encode($updated_data));
     		$this->db->where( array('user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash_code));
     		$this->db->update('xtra_candidate_attended_data', $schedule_data2);
 

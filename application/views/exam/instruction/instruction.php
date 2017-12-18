@@ -15,7 +15,7 @@
 				    <input type="checkbox" id="inlineCheckbox2" value="option1">
 				    <label for="inlineCheckbox2"> I have Read And Understood the above Instruction </label>
 				</div>
-	            <button class="btn btn-primary waves-effect waves-light take_schedule_btn" type="button" data-examschedule="<?php echo base_url('online/exam/schedule').'/6'?>">
+	            <button class="btn btn-primary waves-effect waves-light take_schedule_btn" type="button" data-examschedule="<?php echo base_url('online/exam/schedule').'/'.$schedule_id ?>">
 	                Take Exam <i class="ion-arrow-right-b"></i>
 	            </button>
 	        </div>

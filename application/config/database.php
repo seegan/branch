@@ -39,6 +39,11 @@ $db['default']['username'] = "root";
 $db['default']['password'] = "";
 $db['default']['database'] = "codeigniter_install";
 
+
+/*$db['default']['username'] = "wifieud6_xtragen";
+$db['default']['password'] = "Xtra@123";
+$db['default']['database'] = "wifieud6_xtragenius";*/
+
 // The following values can probably stay the same.
 $db['default']['hostname'] = "localhost";
 $db['default']['dbdriver'] = "mysqli"; //Updated to latest driver.

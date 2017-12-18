@@ -15,6 +15,7 @@ class Exam extends MY_Controller {
 	function instruction($schedule_id = 0, $instruction_id = 1) {
 		$data['candidate_data'] = $this->candidate_data;
 		$data['current_exams'] = getBatchCurrentExams($this->candidate_data->batch_id, date('Y-m-d H:i:s'));
+		$data['schedule_id'] = $schedule_id;
 
 		if( $schedule_data = canTakeExam($schedule_id, $this->auth_user_id, date('Y-m-d H:i:s')) ) {
 			$page_content = $this->load->view('exam/instruction/instruction', $data, TRUE);

@@ -36,10 +36,10 @@ if( ! function_exists('getScheduleDetail') )
 
 if( ! function_exists('canTakeExam') )
 {
-	function canTakeExam($schedule_id = 0, $user_id = 0, $data_time = '0000-00-00')
+	function canTakeExam($schedule_id = 0, $user_id = 0, $date_time = '0000-00-00')
 	{
 		$CI =& get_instance();
-		if($schedule_data = $CI->common->scheduleAvailToTake($schedule_id, $data_time)) {
+		if($schedule_data = $CI->common->scheduleAvailToTake($schedule_id, $date_time)) {
 			if( scheduleAvailToCandidate($schedule_id, $user_id, $schedule_data->schedule_to) ) {
 				return $schedule_data;
 			}
@@ -53,8 +53,6 @@ if( ! function_exists('scheduleAvailToCandidate') )
 {
 	function scheduleAvailToCandidate($schedule_id = 0, $user_id = 0, $schedule_to = 2)
 	{
-
-
 		$CI =& get_instance();
 		if( $CI->common->scheduleAvailToCandidate($schedule_id, $user_id) ) {
 			if($schedule_to != 1) {
@@ -72,7 +70,7 @@ if( ! function_exists('checkScheduleAvailToSelectedCandidate') )
 	{
 		$CI =& get_instance();
 		if( $schedule_candidates = $CI->common->getScheduleCandidateDetail($schedule_id) ) {
-			$unseri_data = unserialize($schedule_candidates->candidates);
+			$unseri_data = json_decode($schedule_candidates->candidates, true);
 			if(is_array($unseri_data) && count($unseri_data) > 0 && in_array_r($user_id, $unseri_data)) {
 				return true;
 			}
@@ -124,7 +122,7 @@ if( ! function_exists('getExamQuestions') )
 			$seri_questions = $base_data->questions;
 			unset($base_data->questions);
 
-			$question_data = unserialize($seri_questions);
+			$question_data = json_decode($seri_questions, true);
 
 			$data['questions'] = implode(",", array_keys($question_data));
 			$data['question_data'] = combainQuestionOptions($data['questions']);
@@ -195,7 +193,7 @@ if( ! function_exists('getCandidateQuestionData') )
 	{
 		$CI =& get_instance();
 		if( $data = $CI->common->getAttendedScheduleDetail($schedule_id, $candidate_id) ) {
-			return unserialize( $data->answer_data );
+			return json_decode( $data->answer_data, true );
 		}
 		return false;
 	}
@@ -410,7 +408,7 @@ if( ! function_exists('setCandidateAttendSchedule') )
 
 		$CI =& get_instance();
 		$hash = get_unused_exam_hash();
-		$ans_data = serialize(array());
+		$ans_data = json_encode(array());
 
 		$schedule_data = array('user_id' => $user_id, 'schedule_id' => $schedule_id, 'schedule_hash' => $hash, 'last_update' => $date_time);
 

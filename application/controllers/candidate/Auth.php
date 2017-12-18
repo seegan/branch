@@ -23,13 +23,9 @@ class Auth extends MY_Controller {
 				redirect('admin/dashboard');
 				die();
 			}
-
 			redirect('candidate/dashboard');
-			
-		    
 		}
-		elseif( $this->tokens->match && $this->optional_login() )
-		{
+		elseif( $this->tokens->match && $this->optional_login() ) {
 			var_dump("login token matter"); die();
 		}
 		else
