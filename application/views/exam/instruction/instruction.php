@@ -4,6 +4,7 @@
 			<div class="col-lg-12">
 				<div class="text-center">
 					<h2>General Instructions</h2>
+					
 				</div>
 			</div>
 		</div>

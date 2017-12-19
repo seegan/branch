@@ -1,55 +1,9 @@
-function launchApplication(l_url, l_windowName)
-{
-    if ( typeof launchApplication.winRefs == 'undefined' )
-    {
-        launchApplication.winRefs = {};
-    }
-    if ( typeof launchApplication.winRefs[l_windowName] == 'undefined' || launchApplication.winRefs[l_windowName].closed )
-    {
-        var l_width = screen.availWidth;
-        var l_height = screen.availHeight;
-
-        var l_params = 'status=1' +
-                       ',resizable=1' +
-                       ',scrollbars=1' +
-                       ',width=' + l_width +
-                       ',height=' + l_height +
-                       ',left=0' +
-                       ',top=0';
-
-        launchApplication.winRefs[l_windowName] = window.open(l_url, l_windowName, l_params);
-        launchApplication.winRefs[l_windowName].moveTo(0,0);
-        launchApplication.winRefs[l_windowName].resizeTo(l_width, l_height);
-    } else {
-        launchApplication.winRefs[l_windowName].focus()
-    }
-}
-
-
-/*jQuery(document).ready(function(){
-
-  var qus_str = questions.questions;
-  question = qus_str.split(',');
-  console.log(question);
-  
-});*/
-
-
-
-
-
-
-
-
-
-
-
-
 (function($) {
 
   var OnlineExam = function(element, options) {
     var settings = jQuery.extend({
       container:'.answer-board',
+      camera : { allow: true, intervel: 1000 }
     }, options);
 
     var elem = $(element);
@@ -399,6 +353,34 @@ function launchApplication(l_url, l_windowName)
           collectExamData('submit');
         });
       },
+      'onCameraAccess' : function() {
+
+        Webcam.set({
+          width: 1280,
+          height: 720,
+          image_format: 'jpeg',
+          jpeg_quality: 90,
+          enable_flash: false,
+          constraints: {
+            width: { exact: 1280 },
+            height: { exact: 720 }
+          }
+        });
+        Webcam.attach( '#my_camera' );
+
+        Webcam.on( 'live', function() {
+          console.log("<p><b>EVENT FIRED:</b> Camera is live.</p>");
+        });
+        Webcam.on( 'error', function(err) {
+          console.log("<p><b>EVENT FIRED:</b> Camera is error.</p>");
+          open(location, '_self').close();
+        });        
+      },
+
+
+
+
+
 
 
 
@@ -422,6 +404,11 @@ function launchApplication(l_url, l_windowName)
             output.onSaveAndContinueLater();
             output.onSaveAndSubmit();
 
+
+            if(settings.camera.allow) {
+              output.onCameraAccess();
+            }
+            
 
 
             //var privatefun = function(){ console.log('inside private');  }
@@ -508,6 +495,18 @@ function launchApplication(l_url, l_windowName)
 $('#question-navigator').OnlineTest({
   container:'.answer-board',
 });
+
+
+function take_snapshot() {
+  // take snapshot and get image data
+  Webcam.snap( function(data_uri) {
+    // display results in page
+    console.log(data_uri);
+  });
+}
+
+
+
 //var onlinetest = $('#question-navigator').OnlineTest({answer_container:'answer-board'});
 //onlinetest.publicMethod();
 

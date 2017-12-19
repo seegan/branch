@@ -17,6 +17,10 @@ class Exam extends MY_Controller {
 		$data['current_exams'] = getBatchCurrentExams($this->candidate_data->batch_id, date('Y-m-d H:i:s'));
 		$data['schedule_id'] = $schedule_id;
 
+        $data['javascripts'][] = base_url().'theme/assets/js/custom/webcam.min.js';
+        $data['javascripts'][] = base_url().'theme/assets/js/custom/online_exam.js';
+
+
 		if( $schedule_data = canTakeExam($schedule_id, $this->auth_user_id, date('Y-m-d H:i:s')) ) {
 			$page_content = $this->load->view('exam/instruction/instruction', $data, TRUE);
 		} else {
@@ -29,6 +33,10 @@ class Exam extends MY_Controller {
 
 	function schedule($schedule_id = 0){
 		$data['candidate_data'] = $this->candidate_data;
+		
+		$data['javascripts'][] = base_url().'theme/assets/js/jquery.countdownTimer.js';
+        $data['javascripts'][] = base_url().'theme/assets/js/custom/webcam.min.js';
+        $data['javascripts'][] = base_url().'theme/assets/js/custom/online_exam.js';
 
 		$page_content = 'Not Available';
 
