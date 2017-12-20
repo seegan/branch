@@ -79,13 +79,68 @@ jQuery(document).ready(function () {
     launchApplication(exam_link, 'Exam Window');
   });
 
+
+
+  Webcam.set({
+    width: 1280,
+    height: 720,
+    image_format: 'jpeg',
+    jpeg_quality: 90,
+    enable_flash: false,
+    constraints: {
+      width: { exact: 1280 },
+      height: { exact: 720 }
+    }
+  });
+
+  Webcam.on( 'live', function() {
+    if(jQuery('.take_schedule_btn').data('examschedule').length > 0) {
+      location.href = jQuery('.take_schedule_btn').data('examschedule');
+    }
+  });
+  Webcam.on( 'error', function(err) {
+    alert('Please enable Camera to take this exam');
+  });
+
+
+
+
   jQuery('.take_schedule_btn').on('click', function(){
-    var exam_link = jQuery(this).data('examschedule');
-    location.href = exam_link;
+
+    var camera_alowed = true;
+    var exam_link = jQuery('.take_schedule_btn').data('examschedule');
+
+    if(jQuery('#tos_instruction:checked').length > 0 ) {
+
+      if(camera_alowed == true) {
+        Webcam.attach( '#my_camera' );
+      } else {
+        location.href = exam_link;
+      } 
+
+    } else {
+      alert('Please read and accept instructions!');
+    }
+
+
+
+
+
+
   });
 
 
 });
+
+
+
+function take_snapshot() {
+  // take snapshot and get image data
+  Webcam.snap( function(data_uri) {
+    // display results in page
+    console.log(data_uri);
+  });
+}
 
 
 function launchApplication(l_url, l_windowName)

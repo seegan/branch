@@ -23,19 +23,17 @@
             'schedule_id' : $('#schedule_id').val(),
           },
           success: function( data ) {
-              if(data.redirect) {
-                location.href = data.redirect;
-              }
-              if(data.window_close) {
-                //window.close();
-                open(location, '_self').close();
-              }
+            if(data.redirect) {
+              location.href = data.redirect;
+            }
+            if(data.window_close) {
+              open(location, '_self').close();
+            }
 
-              jQuery('.status_msg').append("<div class='status_message success'>"+data.page_action+"</div>");
-              setTimeout(function() {
-                jQuery('.status_message').remove();
-              }, 2000);
-
+            jQuery('.status_msg').append("<div class='status_message success'>"+data.page_action+"</div>");
+            setTimeout(function() {
+              jQuery('.status_message').remove();
+            }, 2000);
           },
           done: function() {
           }
@@ -225,14 +223,12 @@
     var output = {
 
       'listener':function(param){
-          delta = 10000,
-          window.tid = setInterval(function() {
-              //output.activeTimeUpdate(time);       
-              activeTimeUpdate('test');       
-          }, delta);
-
+        delta = 10000,
+        window.tid = setInterval(function() {
+            //output.activeTimeUpdate(time);       
+            activeTimeUpdate('test');       
+        }, delta);
       },
-
 
 
       'toNextQuestion': function() {
@@ -247,8 +243,6 @@
           moveToPrev(current_question);
         });
       },
-
-
 
 
       'createBoard':function() {
@@ -355,26 +349,7 @@
       },
       'onCameraAccess' : function() {
 
-        Webcam.set({
-          width: 1280,
-          height: 720,
-          image_format: 'jpeg',
-          jpeg_quality: 90,
-          enable_flash: false,
-          constraints: {
-            width: { exact: 1280 },
-            height: { exact: 720 }
-          }
-        });
-        Webcam.attach( '#my_camera' );
-
-        Webcam.on( 'live', function() {
-          console.log("<p><b>EVENT FIRED:</b> Camera is live.</p>");
-        });
-        Webcam.on( 'error', function(err) {
-          console.log("<p><b>EVENT FIRED:</b> Camera is error.</p>");
-          open(location, '_self').close();
-        });        
+        
       },
 
 
@@ -497,13 +472,6 @@ $('#question-navigator').OnlineTest({
 });
 
 
-function take_snapshot() {
-  // take snapshot and get image data
-  Webcam.snap( function(data_uri) {
-    // display results in page
-    console.log(data_uri);
-  });
-}
 
 
 
