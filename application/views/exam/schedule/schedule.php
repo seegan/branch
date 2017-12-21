@@ -21,6 +21,7 @@
 								<input type="hidden" id="hash_code" value="<?php echo $hash_code; ?>">
 								<input type="hidden" id="schedule_id" value="<?php echo $schedule_data->schedule_id; ?>">
 							</div>
+							<input type="hidden" id="exam_action" value="exam">
 							<div id="my_camera" style="display:none;"></div>
 						</div>
 					</div>
@@ -30,8 +31,6 @@
 
 		</div>
 	</div>
-
-
 
 
 	<div class="instruction-footer">
