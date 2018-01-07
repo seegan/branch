@@ -84,16 +84,6 @@ jQuery(document).ready(function () {
 });
 
 
-
-function take_snapshot() {
-  // take snapshot and get image data
-  Webcam.snap( function(data_uri) {
-    // display results in page
-    console.log(data_uri);
-  });
-}
-
-
 function launchApplication(l_url, l_windowName)
 {
     if ( typeof launchApplication.winRefs == 'undefined' )

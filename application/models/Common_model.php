@@ -12,6 +12,13 @@ class Common_model extends MY_Model {
 	 * @param   string  either the username or email address of a user
 	 * @return  mixed   either query data as object or FALSE
 	 */
+
+	function insert($table,$data = array()) {
+        $this->db->insert($table, $data);// common insert function 
+        return $this->db->affected_rows() == 1 ? $this->db->insert_id() : false ;
+    }
+
+
 	public function hasBranchAccessCandidate( $branch, $user )
 	{
 		$query = $this->db->query("SELECT c.name, c.enrollment_no, b.name as branch_name, cbb.branch_id, cbb.batch_id FROM xtra_candidate_branch_batch as cbb JOIN xtra_candidate as c ON cbb.candidate_id = c.user_id JOIN xtra_branch as b ON cbb.branch_id = b.id WHERE b.active = 1 AND cbb.active = 1 AND c.active = 1 AND cbb.candidate_id = ".$user);

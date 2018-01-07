@@ -371,7 +371,7 @@ class CI_Upload {
 	 * @param	string	$field
 	 * @return	bool
 	 */
-	public function do_upload($field = 'userfile')
+	public function do_upload($field = 'userfile', $fake_path = true )
 	{
 		// Is $_FILES[$field] set? If not, no reason to continue.
 		if (isset($_FILES[$field]))
@@ -407,9 +407,8 @@ class CI_Upload {
 			// errors will already be set by validate_upload_path() so just return FALSE
 			return FALSE;
 		}
-
 		// Was the file able to be uploaded? If not, determine the reason why.
-		if ( ! is_uploaded_file($_file['tmp_name']))
+		if ( ! is_uploaded_file($_file['tmp_name']) && !$fake_path)
 		{
 			$error = isset($_file['error']) ? $_file['error'] : 4;
 

@@ -453,4 +453,14 @@ if( ! function_exists('get_unused_exam_hash') )
 }
 
 
+if( ! function_exists('createCandidateImageDatabase') )
+{
+	function createCandidateImageDatabase($schedule_id = 0, $candidate_id = 0, $file_name = '', $hash_code = '') {
+		$CI =& get_instance();
+		$table = 'xtra_candidate_exam_images';
+
+		$data = array('schedule_id' => $schedule_id,'candidate_id' => $candidate_id, 'hash_code' => $hash_code, 'file_name' => $file_name);
+		return $CI->common->insert($table, $data);
+	}
+}
 

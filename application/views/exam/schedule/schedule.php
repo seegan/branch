@@ -22,7 +22,9 @@
 								<input type="hidden" id="schedule_id" value="<?php echo $schedule_data->schedule_id; ?>">
 							</div>
 							<input type="hidden" id="exam_action" value="exam">
+							<button class="takeSnap" style="display:none;">Take Snap</button>
 							<div id="my_camera" style="display:none;"></div>
+							<div id="results"></div>
 						</div>
 					</div>
 

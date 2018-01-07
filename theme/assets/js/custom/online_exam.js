@@ -1,9 +1,86 @@
+jQuery(document).ready(function() {
+
+
+
+  Webcam.set({
+    width: 1280,
+    height: 720,
+    image_format: 'jpeg',
+    jpeg_quality: 90,
+    enable_flash: false,
+    constraints: {
+      width: { exact: 1280 },
+      height: { exact: 720 }
+    }
+  });
+
+  var exam_action = jQuery('#exam_action').val();
+
+  Webcam.on( 'live', function() {
+    if(exam_action == 'instruction') {
+      location.href = jQuery('.take_schedule_btn').data('examschedule');
+    }
+  });
+
+  Webcam.on( 'error', function(err) {
+    if(exam_action == 'instruction') {
+      alert('Please enable Camera to take this exam');
+    }
+    if(exam_action == 'exam') {
+      alert('Please enable Camera to take this exam');
+    }
+  });
+
+
+  jQuery('.take_schedule_btn').on('click', function(){
+    var camera_alowed = true;
+    var exam_link = jQuery('.take_schedule_btn').data('examschedule');
+
+    if(jQuery('#tos_instruction:checked').length > 0 ) {
+      if(camera_alowed == true) {
+        Webcam.attach( '#my_camera' );
+      } else {
+        location.href = exam_link;
+      } 
+    } else {
+      alert('Please read and accept instructions!');
+    }
+  });
+
+});
+
+
+/*
+function take_snapshot() {
+  // take snapshot and get image data
+  Webcam.snap( function(data_uri) {
+    // display results in page
+    document.getElementById('results').innerHTML = 
+      '<h2>Here is your image:</h2>' + 
+      '<img src="'+data_uri+'"/>';
+  });
+
+
+  var data_uri = Webcam.snap();
+  var formdata = new FormData();
+  formdata.append("base64image", data_uri);
+  var ajax = new XMLHttpRequest();
+  ajax.addEventListener("load", function(event) { uploadcomplete(event);}, false);
+  ajax.open("POST", "upload.php");
+  ajax.send(formdata);
+
+
+
+}*/
+
+
+
 (function($) {
 
   var OnlineExam = function(element, options) {
     var settings = jQuery.extend({
       container:'.answer-board',
-      camera : { allow: true, intervel: 1000 }
+      camera : { allow: true, intervel: 30000 }
     }, options);
 
     var elem = $(element);
@@ -222,11 +299,16 @@
 
     var output = {
 
+      'cameraListener':function(param){
+        window.tid = setInterval(function() {      
+          jQuery('.takeSnap').click();      
+        }, settings.camera.intervel);
+      },
+
       'listener':function(param){
         delta = 10000,
-        window.tid = setInterval(function() {
-            //output.activeTimeUpdate(time);       
-            activeTimeUpdate('test');       
+        window.tid = setInterval(function() {     
+          activeTimeUpdate('test');       
         }, delta);
       },
 
@@ -349,18 +431,51 @@
       },
       'onCameraAccess' : function() {
         Webcam.attach( '#my_camera' );
-        
-        
+      },
+
+      'take_snapshot' : function() {
+        Webcam.snap( function(data_uri) {
+
+          var schedule_id = jQuery('#schedule_id').val();
+          var hash_code = jQuery('#hash_code').val();
+          var formdata;
+
+          formdata = new FormData();
+          formdata.append( 'file', data_uri );
+          formdata.append('schedule_id', schedule_id);
+          formdata.append('hash_code', hash_code);
+          formdata.append('action', 'candidate_image');
+
+          jQuery.ajax({
+              url: filter_ajaxurl,
+              data: formdata,
+              processData: false,
+              contentType: false,
+              type: 'POST',
+              dataType: 'json',
+              success: function ( data ) {
+                console.log( data );
+              }
+          });
+        });
       },
 
 
-
-
-
-
-
-
       'init':function(){
+
+
+          Webcam.set({
+            width: 1280,
+            height: 720,
+            image_format: 'jpeg',
+            jpeg_quality: 90,
+            enable_flash: false,
+            constraints: {
+              width: { exact: 1280 },
+              height: { exact: 720 }
+            }
+          });
+
 
           localStorage.removeItem('navigator_data');
           localStorage.removeItem('board_data');
@@ -382,10 +497,18 @@
 
 
             if(settings.camera.allow) {
-              output.onCameraAccess();
-            }
-            
 
+              output.onCameraAccess();
+              Webcam.on( 'error', function(err) {
+                alert('Please enable Camera to take this exam');
+              });
+
+              Webcam.on( 'load', function() {
+                jQuery('.takeSnap').click(); 
+              });
+              
+              output.cameraListener();
+            }
 
             //var privatefun = function(){ console.log('inside private');  }
             
@@ -394,11 +517,9 @@
 
             _this.$this.find('#navigator-in li').on('click',function(){
 
-
                 //Timer Reset when li click
                 clearInterval(window.tid);
                 output.listener();
-
 
                 var question_id = $(this).data('questionid');
                 var question_status = $(this).attr('class');
@@ -421,9 +542,11 @@
                   default:
                     break;
                 }
-
             });
 
+            jQuery('.takeSnap').on('click', function(){
+              output.take_snapshot();
+            });
 
             jQuery('#hms_timer').countdowntimer({
                 hours : time_remain.hour,
@@ -433,11 +556,14 @@
                 alertFromSec : 480,
             });
 
-            $(window).resize(function() {
+            jQuery(window).resize(function() {
               var board_height = (window.innerHeight) - 275;
               board_height = board_height+'px';
-              $(".inner-board").height(board_height);
+              jQuery(".inner-board").height(board_height);
             }).resize();              
+
+
+
 
           });
           //output.function1("value");
@@ -470,71 +596,14 @@
 
 
 
-jQuery(document).ready(function() {
-
-  Webcam.set({
-    width: 1280,
-    height: 720,
-    image_format: 'jpeg',
-    jpeg_quality: 90,
-    enable_flash: false,
-    constraints: {
-      width: { exact: 1280 },
-      height: { exact: 720 }
-    }
-  });
-
-  var exam_action = jQuery('#exam_action').val();
-
-  Webcam.on( 'live', function() {
-    if(exam_action == 'instruction') {
-      location.href = jQuery('.take_schedule_btn').data('examschedule');
-    }
-  });
-  Webcam.on( 'error', function(err) {
-    if(exam_action == 'instruction') {
-      alert('Please enable Camera to take this exam');
-    }
-    if(exam_action == 'exam') {
-      alert('Please enable Camera to take this exam');
-    }
-  });
 
 
-  jQuery('.take_schedule_btn').on('click', function(){
-    var camera_alowed = true;
-    var exam_link = jQuery('.take_schedule_btn').data('examschedule');
-
-    if(jQuery('#tos_instruction:checked').length > 0 ) {
-      if(camera_alowed == true) {
-        Webcam.attach( '#my_camera' );
-      } else {
-        location.href = exam_link;
-      } 
-    } else {
-      alert('Please read and accept instructions!');
-    }
-  });
-
-});
-
-
-
-
-
-function take_snapshot() {
-  // take snapshot and get image data
-  Webcam.snap( function(data_uri) {
-    // display results in page
-    console.log(data_uri);
-  });
-}
-
-
-
-$('#question-navigator').OnlineTest({
+jQuery('#question-navigator').OnlineTest({
   container:'.answer-board',
 });
+
+
+
 
 
 

@@ -11,7 +11,7 @@ class ExamAjax extends MY_Controller {
         $this->load->helper('form');
         $this->load->library('session');
         $this->candidate_data = hasBranchAccess($this->config->item('branch_id'), $this->auth_user_id);
-        
+ 
         if(!$this->input->is_ajax_request() || !$this->input->post('action')) {
             die('You are not Allowed To Access This Page!!');
         }
@@ -24,6 +24,77 @@ class ExamAjax extends MY_Controller {
 		die();
 	}
 
+    private function candidate_image() {
+        $data['success']       = false;
+
+        $user_id = $this->auth_user_id;
+        $schedule_id = $this->input->post('schedule_id');
+        $hash_code = $this->input->post('hash_code');
+        $img = $this->input->post('file');
+
+        $config['upload_path']          = './uploads/onlinecandidate/';
+        //$config['allowed_types']        = 'xlsx|xls';
+        $config['allowed_types']        = '*';
+        $config['max_size']             = 5120;
+
+        $this->load->library('upload', $config);
+
+
+        if (preg_match('/^data:image\/(\w+);base64,/', $img, $type)) {
+            $img = substr($img, strpos($img, ',') + 1);
+            $type = strtolower($type[1]); // jpg, png, gif
+
+            if (!in_array($type, [ 'jpg', 'jpeg', 'gif', 'png' ])) {
+               $data['success']       = false;
+               echo json_encode($data);
+               die(); 
+            }
+
+            $img = base64_decode($img);
+
+            if ($img === false) {
+                $data['success']       = false;
+                echo json_encode($data);
+                die();
+            }
+        } else {
+            $data['success']       = false;
+            echo json_encode($data);
+            die();
+        }
+
+
+
+        $temp_file_path = tempnam(sys_get_temp_dir(), 'xtr');
+        file_put_contents($temp_file_path, $img);
+        $image_info = getimagesize($temp_file_path); 
+
+
+        $_FILES['userfile'] = array(
+            'name' => uniqid().'.'.preg_replace('!\w+/!', '', $image_info['mime']),
+            'tmp_name' => $temp_file_path,
+            'size'  => filesize($temp_file_path),
+            'error' => UPLOAD_ERR_OK,
+            'type'  => $image_info['mime'],
+        );
+
+
+        if ( !$this->upload->do_upload('userfile', true)) {
+
+            $data['error'] = $this->upload->display_errors();
+            $data['success'] = false;
+        } else {
+            $file_data = $this->upload->data();
+            $data['upload_name'] = $file_data['file_name'];
+            if( $upload_id = createCandidateImageDatabase($schedule_id, $this->auth_user_id, $data['upload_name'], $hash_code )) {
+                $data['success'] = true;
+                $data['upload_id'] = $upload_id;
+            }
+        }
+
+        echo json_encode($data);
+        die();
+    }
 
     private function activeTimeSubmit() {
 
